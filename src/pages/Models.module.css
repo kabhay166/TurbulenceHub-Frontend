@@ -1,0 +1,40 @@
+.container {
+    margin-top: 50px;
+    background-color: rgba(255, 255, 255, 0.637);
+    text-align: center;
+    width: 50%;
+    min-width: 300px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    color: black;
+}
+
+.content {
+    text-align: justify;
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.modelContainer {
+    text-align: left;
+    margin-top: 100px;
+}
+
+.modelContainer button {
+    width: 125px;
+    height: 40px;
+    background-color: rgb(0, 0, 0);
+    color: green;
+}
+
+.modelContainer button a {
+    text-decoration: none;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+}
