@@ -3,6 +3,7 @@ import styles from './HydroDemo.module.css';
 import { useRef, useState } from 'react';
 
 type HydroPara = {
+    kind:string
   device:string;
   device_rank: number;
   dimension: number;
@@ -32,11 +33,12 @@ type InputFieldProps = {
 
 
 const initialHydroPara : HydroPara = {
+    kind: 'HYDRO',
   device: 'CPU',
   device_rank: 0,
   dimension: 2,
   Nx: 64,
-  Ny: 64,
+  Ny: 1,
   Nz: 64,
   nu: 0.1,
   kappa: 0.1,
@@ -111,29 +113,34 @@ export default function HydroDemo() {
         <div>
           <InputField name="device" label='Device' type="select" options={["CPU","GPU"]} />
           <InputField name='device_rank' label='Device Rank' type='number' />
-          <InputField name='dimension' label='Dimension' type='select' options={["1","2","3"]} />
+          <InputField name='dimension' label='Dimension' type='select' options={["2","3"]} />
         </div>
         
         <div>
           <InputField name='Nx' label="Nx" type='select' options={["64","128","256"]} />
-          <InputField name='Ny' label='Ny' type='select' options={["64","128","256"]} />
+          <InputField name='Ny' label='Ny' type='select' options={["1","64","128","256"]} />
           <InputField name='Nz' label='Nz' type='select' options={["64","128","256"]} />
         </div>
 
         <div>
             <InputField name='nu' label='Nu' type='number' />
             <InputField name='eta' label='Eta' type='number' />
+            <InputField name='time_scheme' label='Time Scheme' type='select' options={["EULER","RK2","RK4"]} />
+
         </div>
 
         <div>
-          <InputField name='time_scheme' label='Time Scheme' type='select' options={["EULER","RK2","RK4"]} />
           <InputField name='t_initial' label='Initial Time' type='number' />
           <InputField name='t_final' label='Final Time' type='number' />
           <InputField name='dt' label='Dt' type='number' />
         </div>
-        
-        <button className={styles.runButton}>Run</button>
-        
+
+          <InputField name='kind' label='Kind' type='hidden' />
+
+          <div className={styles.runButtonContainer}>
+              <button className={styles.runButton}>Run</button>
+          </div>
+
       </form>
     </div> }
     
@@ -155,22 +162,24 @@ export default function HydroDemo() {
     
   )
 
-  function InputField({name,label,type,pattern,options} : InputFieldProps) {
-    console.log(pattern);
-  return (
-    <div className={styles.inputContainer}>
-      <label htmlFor={name}>{label}</label>
-      {type === 'select' ? (<select {...register(name)}>
-        {options!.map((e) => <option value={e}>{e}</option>)}</select>
-      ) : type === 'number' ? (
-          <input {...register(name)} type="number" step="any"/>
-      ) : (
-        <input {...register(name)} type="text" />
-      )
-      }
-    </div>
-  );
-}
+    function InputField({name,label,type,pattern,options} : InputFieldProps) {
+        console.log(pattern);
+        return (
+            <div className={styles.inputContainer}>
+                { type !== 'hidden' &&
+                    <label htmlFor={name}>{label}:</label>
+                }
+                { type === 'hidden' ? <input type='hidden' {...register(name)} /> : type === 'select' ? (<select {...register(name)}>
+                        {options!.map((e) => <option value={e}>{e}</option>)}</select>
+                ) : type === 'number' ? (
+                    <input {...register(name)} type="number" step="any"/>
+                ) : (
+                    <input {...register(name)} type="text" />
+                )
+                }
+            </div>
+        );
+    }
 
 }
 

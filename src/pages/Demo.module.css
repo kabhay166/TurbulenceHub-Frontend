@@ -79,21 +79,15 @@ label {
     font-size: 0.9em;
 }
 
-.resultContainer button:nth-of-type(1) {
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 20px;
-}
 
-.resultContainer button:nth-of-type(2) {
+.resultContainer button:nth-of-type(1) {
     background-color: red;
     color: white;
     border: none;
     border-radius: 20px;
 }
 
-.resultContainer button:nth-of-type(3) {
+.resultContainer button:nth-of-type(2) {
     background-color: rgb(27, 222, 27);
     color: white;
     border: none;
@@ -124,13 +118,13 @@ label {
 
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Firefox */
 input[type=number] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 .action-buttons {

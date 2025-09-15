@@ -20,7 +20,7 @@ export default function Models() {
         <HydroDynamicEquation />
 
         <button>
-        <Link to='/hydro-demo'>Try this model <FaArrowRight /></Link>
+        <Link to='/demo/$kind' params={{kind:'hydro'}}>Try this model <FaArrowRight /></Link>
         </button>
       </div>
 
@@ -30,7 +30,7 @@ export default function Models() {
           This is the magneto-hydrodynamic model.
         </p>
         <button>
-        <Link to='/mhd-demo'>Try this model <FaArrowRight /></Link>
+            <Link to='/demo/$kind' params={{kind:'mhd'}}>Try this model <FaArrowRight /></Link>
         </button>
       </div>
       
@@ -50,7 +50,7 @@ function HydroDynamicEquation() {
       <p>
         Momentum equation:
         <MathJax>
-          {"\\( \\frac{\\partial u}{\\partial t} + (u \\cdot \\nabla)u = -\\frac{1}{\\rho}\\nabla p + \\nu \\nabla^2 u \\)"}
+          {"\\( \\frac{\\partial u}{\\partial t} + (u \\cdot \\nabla)u = -\\nabla p + \\nu \\nabla^2 u \\)"}
         </MathJax>
       </p>
     </div>

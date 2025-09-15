@@ -3,6 +3,7 @@ import styles from './HydroDemo.module.css';
 import { useRef, useState } from 'react';
 
 type MHDPara = {
+  kind:string;
   device:string;
   device_rank: number;
   dimension: number;
@@ -26,13 +27,31 @@ type InputFieldProps = {
   options?: string[];
 };
 
+const initialMhdPara : MHDPara = {
+    kind: 'MHD',
+    device: 'CPU',
+    device_rank: 0,
+    dimension: 2,
+    Nx: 64,
+    Ny: 1,
+    Nz: 64,
+    nu: 0.1,
+    kappa: 0.1,
+    eta: 0.1,
+    time_scheme: 'EULER',
+    t_initial: 0.1,
+    t_final: 0.01,
+    dt: 0.001
+
+}
+
 // const saveModes3Pattern : str = "\\(([0-9]+),([0-9]+),([0-9]+)\\)(,\\((([0-9]+),([0-9]+),([0-9]+))\\))*";
 
 // const saveModes2Pattern : str = "\\(([0-9]+),([0-9]+)\\)(,\\((([0-9]+),([0-9]+))\\))*";
 
-export default function HydroDemo() {
+export default function MhdDemo() {
 
-  const {register,handleSubmit} = useForm<MHDPara>();
+  const {register,handleSubmit} = useForm<MHDPara>({defaultValues: initialMhdPara});
   const [output, setOutput] = useState("");
   const resultRef = useRef<HTMLDivElement>(null);
   const [socket,setSocket] = useState<WebSocket | null>(null);
@@ -44,7 +63,7 @@ export default function HydroDemo() {
       socket.close();
     }
 
-    const ws = new WebSocket("ws://localhost:8080/ws/run-exe");
+    const ws = new WebSocket("ws://localhost:8081/ws/run-exe");
     
     
     
@@ -84,12 +103,12 @@ export default function HydroDemo() {
         <div>
           <InputField name="device" label='Device' type="select" options={["CPU","GPU"]} />
           <InputField name='device_rank' label='Device Rank' type='number' />
-          <InputField name='dimension' label='Dimension' type='select' options={["1","2","3"]} />
+          <InputField name='dimension' label='Dimension' type='select' options={["2","3"]} />
         </div>
         
         <div>
           <InputField name='Nx' label="Nx" type='select' options={["64","128","256"]} />
-          <InputField name='Ny' label='Ny' type='select' options={["64","128","256"]} />
+          <InputField name='Ny' label='Ny' type='select' options={["1","64","128","256"]} />
           <InputField name='Nz' label='Nz' type='select' options={["64","128","256"]} />
         </div>
 
@@ -105,6 +124,8 @@ export default function HydroDemo() {
           <InputField name='t_final' label='Final Time' type='number' />
           <InputField name='dt' label='Dt' type='number' />
         </div>
+
+          <InputField name='kind' label='Kind' type='hidden' />
         
         <button className={styles.btn}>Run</button>
         
@@ -126,8 +147,10 @@ export default function HydroDemo() {
     console.log(pattern);
   return (
     <div className={styles.inputContainer}>
-      <label htmlFor={name}>{label}:</label>
-      {type === 'select' ? (<select {...register(name)}>
+        { type !== 'hidden' &&
+            <label htmlFor={name}>{label}:</label>
+        }
+      { type === 'hidden' ? <input type='hidden' {...register(name)} /> : type === 'select' ? (<select {...register(name)}>
         {options!.map((e) => <option value={e}>{e}</option>)}</select>
       ) : type === 'number' ? (
           <input {...register(name)} type="number" step="any"/>

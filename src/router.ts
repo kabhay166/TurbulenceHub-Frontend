@@ -13,6 +13,7 @@ import HydroDemo from './pages/HydroDemo'
 import MhdDemo from './pages/MhdDemo'
 import { Login } from './pages/Login'
 import { Signup } from './pages/Signup'
+import Demo from "@/pages/Demo.tsx";
 
 const rootRoute = createRootRoute({component:Root})
 const homeRoute = createRoute({
@@ -51,6 +52,12 @@ const mhdDemo = createRoute({
     component: MhdDemo,
 })
 
+const demo = createRoute({
+    getParentRoute: () => rootRoute,
+    path: "/demo/$kind",
+    component: Demo,
+})
+
 const loginRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: '/user/login',
@@ -63,7 +70,7 @@ const signupRoute = createRoute({
     component: Signup,
 })
 
-const routeTree = rootRoute.addChildren([homeRoute, aboutRoute, dataRoute,modelsRoute,hydroDemo,mhdDemo,loginRoute, signupRoute])
+const routeTree = rootRoute.addChildren([homeRoute, aboutRoute, dataRoute,modelsRoute,hydroDemo,mhdDemo,demo,loginRoute, signupRoute])
 
 export const router = createRouter({routeTree})
 
