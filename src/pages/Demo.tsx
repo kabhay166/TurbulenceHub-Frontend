@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import styles from './Demo.module.css';
 import { useRef, useState } from 'react';
 import {useParams} from "@tanstack/react-router";
+import {RunPath} from "@/global_configurations.ts";
 
 type Para = {
     kind:string;
@@ -65,7 +66,7 @@ export default function Demo() {
             socket.close();
         }
 
-        const ws = new WebSocket("ws://localhost:8081/ws/run-exe");
+        const ws = new WebSocket(RunPath);
 
 
 
