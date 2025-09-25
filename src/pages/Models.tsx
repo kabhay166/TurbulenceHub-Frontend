@@ -1,58 +1,86 @@
 import styles from './Models.module.css';
 import { Link } from '@tanstack/react-router';
 import { MathJaxContext } from "better-react-mathjax";
-import { MathJax } from "better-react-mathjax";
 import { FaArrowRight } from "react-icons/fa";
 
 export default function Models() {
   return (
     <MathJaxContext>
     <div className={styles.container}>
-      <h1>Models</h1>
-      <p>In our study of turbulence we deal with the following models.</p>
-      
-      <div className={styles.modelContainer}>
-        <h2>Hydro</h2>
-        <p>
-          A hydrodynamic model of turbulence refers to the mathematical description
-          of turbulent fluid motion using the governing equations of fluid dynamics.
-        </p>
-        <HydroDynamicEquation />
-
-        <button>
-        <Link to='/demo/$kind' params={{kind:'hydro'}}>Try this model <FaArrowRight /></Link>
-        </button>
-      </div>
-
-      <div className={styles.modelContainer}>
-        <h2>MHD</h2>
-        <p>
-          This is the magneto-hydrodynamic model.
-        </p>
-        <button>
-            <Link to='/demo/$kind' params={{kind:'mhd'}}>Try this model <FaArrowRight /></Link>
-        </button>
-      </div>
-      
+        {/*<ModelSidebar />*/}
+        <ModelMain />
       </div>
       </MathJaxContext>
   )
 }
 
-function HydroDynamicEquation() {
-  return (
-    <div>
-      <p>
-        Continuity equation:
-        <MathJax>{"\\( \\nabla \\cdot u = 0 \\)"}</MathJax>
-      </p>
 
-      <p>
-        Momentum equation:
-        <MathJax>
-          {"\\( \\frac{\\partial u}{\\partial t} + (u \\cdot \\nabla)u = -\\nabla p + \\nu \\nabla^2 u \\)"}
-        </MathJax>
-      </p>
+
+function ModelSidebar() {
+    return <div className={styles.sidebar}>
+        <ul>
+            <li>Euler</li>
+            <li>Hydro</li>
+            <li>MHD</li>
+        </ul>
     </div>
-  );
 }
+
+function ModelMain() {
+    return <div className={styles.main}>
+        <h1>Models</h1>
+        {/*<p>In our study of turbulence we deal with the following models.</p>*/}
+
+        <div className={styles.modelsContainer}>
+
+        <ModelItem title={'Euler'}
+                   content={"The Euler model describes the dynamics of an ideal fluid where viscosity and heat conduction are neglected. It is widely used to study large-scale flow structures, compressible and incompressible flows, and shock wave phenomena without accounting for turbulence or dissipation."}
+                   kind={'euler'} />
+
+        <ModelItem
+            title={'Hydro'}
+            content={"The hydrodynamic turbulence model governs the motion of viscous fluids through the Navier–Stokes equations. It captures the development of vortices, eddies, and turbulent cascades, and is fundamental for studying real-world flows ranging from aerodynamics to ocean currents."}
+            kind={'hydro'}
+            />
+
+            <ModelItem
+                title={'MHD'}
+                content={"The magnetohydrodynamic (MHD) model extends fluid dynamics by coupling the Navier–Stokes equations with Maxwell’s equations. It describes the interaction between fluid motion and magnetic fields, and is essential in astrophysics, plasma physics, and fusion research."}
+                kind={'mhd'}
+            />
+
+            <ModelItem
+                title={'RBC'}
+                content={"The Rayleigh–Bénard convection (RBC) model explains buoyancy-driven flows in a fluid layer heated from below and cooled from above. It is a canonical system for studying convection, turbulence, and pattern formation in geophysical and astrophysical environments."}
+                kind={'rbc'}
+            />
+
+        </div>
+    </div>
+}
+
+
+function ModelItem({title,content,kind} : {title:string, content: string,kind:string}) {
+    return <div className={styles.modelItem}>
+        <h2>{title}</h2>
+        <div>
+            <p>
+                {content}
+            </p>
+
+            <div className={styles.buttonContainer}>
+
+                <button>
+                    <Link to={`/models/${title.toLowerCase()}`}>Learn More <FaArrowRight /></Link>
+                </button>
+                <button>
+                    <Link to='/demo/$kind' params={{kind:kind}}>Try this model <FaArrowRight /></Link>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+

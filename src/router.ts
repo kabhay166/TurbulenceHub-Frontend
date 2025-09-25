@@ -14,6 +14,11 @@ import MhdDemo from './pages/MhdDemo'
 import { Login } from './pages/Login'
 import { Signup } from './pages/Signup'
 import Demo from "@/pages/Demo.tsx";
+import UserDashboard from "@/pages/UserDashboard.tsx";
+import HydroModel from "@/pages/models/HydroModel.tsx";
+import EulerModel from "@/pages/models/EulerModel.tsx";
+import MhdModel from "@/pages/models/MhdModel.tsx";
+import RbcModel from "@/pages/models/RbcModel.tsx";
 
 const rootRoute = createRootRoute({component:Root})
 const homeRoute = createRoute({
@@ -70,7 +75,41 @@ const signupRoute = createRoute({
     component: Signup,
 })
 
-const routeTree = rootRoute.addChildren([homeRoute, aboutRoute, dataRoute,modelsRoute,hydroDemo,mhdDemo,demo,loginRoute, signupRoute])
+const dashboardRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/dashboard',
+    component: UserDashboard,
+})
+
+const eulerModelRoute = createRoute({
+        getParentRoute: () => rootRoute,
+        path: '/models/euler',
+        component: EulerModel,
+    }
+)
+
+const hydroModelRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/models/hydro',
+    component: HydroModel,
+    }
+)
+
+const mhdModelRoute = createRoute({
+        getParentRoute: () => rootRoute,
+        path: '/models/mhd',
+        component: MhdModel,
+    }
+)
+
+const rbcModelRoute = createRoute({
+        getParentRoute: () => rootRoute,
+        path: '/models/rbc',
+        component: RbcModel,
+    }
+)
+
+const routeTree = rootRoute.addChildren([homeRoute, aboutRoute, dataRoute,modelsRoute,hydroDemo,mhdDemo,demo,loginRoute, signupRoute,dashboardRoute,eulerModelRoute,hydroModelRoute,mhdModelRoute,rbcModelRoute])
 
 export const router = createRouter({routeTree})
 

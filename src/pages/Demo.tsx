@@ -1,37 +1,29 @@
-import { useForm } from 'react-hook-form';
-import styles from './Demo.module.css';
-import { useRef, useState } from 'react';
-import {useParams} from "@tanstack/react-router";
-import {RunPath} from "@/global_configurations.ts";
+import { useState, useRef } from "react";
+import styles from "./Demo.module.css";
+import { useParams } from "@tanstack/react-router";
+import { RunPath } from "@/global_configurations.ts";
+import { FaArrowRight} from "react-icons/fa";
 
 type Para = {
-    kind:string;
-    device:string;
+    kind: string;
+    device: string;
     device_rank: number;
     dimension: number;
-    Nx: number
-    Ny: number
-    Nz: number
-    nu: number
-    eta: number
-    kappa: number
-    time_scheme: string
-    t_initial: number
-    t_final: number
-    dt: number
-}
-
-type InputFieldProps = {
-    name: keyof Para;
-    label: string;
-    type: string;
-    pattern?: string;
-    options?: string[];
+    Nx: number;
+    Ny: number;
+    Nz: number;
+    nu: number;
+    eta: number;
+    kappa: number;
+    time_scheme: string;
+    t_initial: number;
+    t_final: number;
+    dt: number;
 };
 
-const initialPara : Para = {
-    kind: '',
-    device: 'CPU',
+const initialPara: Para = {
+    kind: "",
+    device: "CPU",
     device_rank: 0,
     dimension: 2,
     Nx: 64,
@@ -40,39 +32,53 @@ const initialPara : Para = {
     nu: 0.1,
     kappa: 0.1,
     eta: 0.1,
-    time_scheme: 'EULER',
+    time_scheme: "EULER",
     t_initial: 0,
     t_final: 0.1,
-    dt: 0.001
+    dt: 0.001,
+};
 
-}
-
-// const saveModes3Pattern : str = "\\(([0-9]+),([0-9]+),([0-9]+)\\)(,\\((([0-9]+),([0-9]+),([0-9]+))\\))*";
-
-// const saveModes2Pattern : str = "\\(([0-9]+),([0-9]+)\\)(,\\((([0-9]+),([0-9]+))\\))*";
+const dimensionOptions = ["2","3"];
+const gridOptions = ["64"];
+const timeSchemeOptions = ["EULER", "RK2", "RK4"];
 
 export default function Demo() {
-    const {kind} = useParams({ from: "/demo/$kind" });
-    initialPara.kind = kind.toUpperCase();
-    const {register,handleSubmit} = useForm<Para>({defaultValues: initialPara});
+    const { kind } = useParams({ from: "/demo/$kind" });
+    const [para, setPara] = useState<Para>({
+        ...initialPara,
+        kind: kind.toUpperCase(),
+    });
     const [output, setOutput] = useState("");
+    const [socket, setSocket] = useState<WebSocket | null>(null);
+    const [running, setRunning] = useState(false);
     const resultRef = useRef<HTMLDivElement>(null);
-    const [socket,setSocket] = useState<WebSocket | null>(null);
-    const [running,setRunning] = useState<boolean>(false);
 
-    function onSubmit(data:Para) {
+    function handleChange(
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) {
+        const { name, value } = e.target;
 
-        if(socket && socket.readyState !== WebSocket.CLOSED) {
+        setPara((prev) => ({
+            ...prev,
+            [name]:
+                e.target.type === "number" || !isNaN(Number(value))
+                    ? Number(value)
+                    : value,
+        }));
+    }
+
+    function onSubmit(e: React.FormEvent) {
+        e.preventDefault();
+
+        if (socket && socket.readyState !== WebSocket.CLOSED) {
             socket.close();
         }
 
         const ws = new WebSocket(RunPath);
 
-
-
         ws.onopen = () => {
             console.log("WebSocket connected");
-            ws.send(JSON.stringify(data));
+            ws.send(JSON.stringify(para));
         };
 
         ws.onmessage = (event) => {
@@ -94,92 +100,191 @@ export default function Demo() {
     }
 
     function handleRunStop() {
-        socket!.send("stop");
-        // socket!.close();
+        socket?.send("stop");
         setSocket(null);
     }
 
     function handleStartNewRun() {
-        setOutput("")
+        setOutput("");
         setRunning(false);
-
     }
 
     return (
         <div className={styles.container}>
+            {!running && (
+                <div className={styles.formContainer}>
+                    <form onSubmit={onSubmit}>
+                        <div>
+                            <InputField
+                                name="device"
+                                label="Device"
+                                type="select"
+                                options={["CPU", "GPU"]}
+                                value={para.device}
+                                onChange={handleChange}
+                            />
+                            <InputField
+                                name="device_rank"
+                                label="Device Rank"
+                                type="number"
+                                value={para.device_rank}
+                                onChange={handleChange}
+                            />
+                            <InputField
+                                name="dimension"
+                                label="Dimension"
+                                type="select"
+                                options={dimensionOptions}
+                                value={para.dimension}
+                                onChange={handleChange}
+                            />
+                        </div>
 
-            { !running &&  <div className={styles.formContainer}>
-                <form action="" onSubmit={handleSubmit(onSubmit)}>
+                        <div>
+                            <InputField
+                                name="Nx"
+                                label="Nx"
+                                type="select"
+                                options={gridOptions}
+                                value={para.Nx}
+                                onChange={handleChange}
+                            />
+                            <InputField
+                                name="Ny"
+                                label="Ny"
+                                type="select"
+                                options={["1", ...gridOptions]}
+                                value={para.Ny}
+                                onChange={handleChange}
+                            />
+                            <InputField
+                                name="Nz"
+                                label="Nz"
+                                type="select"
+                                options={gridOptions}
+                                value={para.Nz}
+                                onChange={handleChange}
+                            />
+                        </div>
 
-                    <div>
-                        <InputField name="device" label='Device' type="select" options={["CPU","GPU"]} />
-                        <InputField name='device_rank' label='Device Rank' type='number' />
-                        <InputField name='dimension' label='Dimension' type='select' options={["2","3"]} />
-                    </div>
+                        <div>
+                            <InputField
+                                name="nu"
+                                label="Nu"
+                                type="number"
+                                value={para.nu}
+                                onChange={handleChange}
+                            />
+                            <InputField
+                                name="eta"
+                                label="Eta"
+                                type="number"
+                                value={para.eta}
+                                onChange={handleChange}
+                            />
+                            {kind === "mhd" && (
+                                <InputField
+                                    name="kappa"
+                                    label="Kappa"
+                                    type="number"
+                                    value={para.kappa}
+                                    onChange={handleChange}
+                                />
+                            )}
+                        </div>
 
-                    <div>
-                        <InputField name='Nx' label="Nx" type='select' options={["64","128","256"]} />
-                        <InputField name='Ny' label='Ny' type='select' options={["1","64","128","256"]} />
-                        <InputField name='Nz' label='Nz' type='select' options={["64","128","256"]} />
-                    </div>
+                        <div>
+                            <InputField
+                                name="time_scheme"
+                                label="Time Scheme"
+                                type="select"
+                                options={timeSchemeOptions}
+                                value={para.time_scheme}
+                                onChange={handleChange}
+                            />
+                            <InputField
+                                name="t_initial"
+                                label="Initial Time"
+                                type="number"
+                                value={para.t_initial}
+                                onChange={handleChange}
+                            />
+                            <InputField
+                                name="t_final"
+                                label="Final Time"
+                                type="number"
+                                value={para.t_final}
+                                onChange={handleChange}
+                            />
+                            <InputField
+                                name="dt"
+                                label="Dt"
+                                type="number"
+                                value={para.dt}
+                                onChange={handleChange}
+                            />
+                        </div>
 
-                    <div>
-                        <InputField name='nu' label='Nu' type='number' />
-                        <InputField name='eta' label='Eta' type='number' />
-                        {kind === 'mhd' && <InputField name='kappa' label='Kappa' type='number' />}
-                    </div>
+                        <input type="hidden" name="kind" value={para.kind} />
 
-                    <div>
-                        <InputField name='time_scheme' label='Time Scheme' type='select' options={["EULER","RK2","RK4"]} />
-                        <InputField name='t_initial' label='Initial Time' type='number' />
-                        <InputField name='t_final' label='Final Time' type='number' />
-                        <InputField name='dt' label='Dt' type='number' />
-                    </div>
-
-                    <InputField name='kind' label='Kind' type='hidden' />
-
-                    <div className={styles.runButtonContainer}>
-                        <button className={styles.runButton}>Run</button>
-                    </div>
-
-                </form>
-            </div> }
-            { running && <div className={styles.resultContainer}>
-                <div>
-
-                    <button className={styles.clearButton} onClick={handleRunStop}>Stop run</button>
-                    <button className={styles.clearButton} onClick={handleStartNewRun}>New run</button>
-
+                        <div className={styles.runButtonContainer}>
+                            <button className={styles.runButton}>Run <FaArrowRight/>  </button>
+                        </div>
+                    </form>
                 </div>
-                <div ref={resultRef} className={styles.outputContainer}>
-
-                    <pre>{output}</pre>
+            )}
+            {running && (
+                <div className={styles.resultContainer}>
+                    <div>
+                        <button className={styles.clearButton} onClick={handleRunStop}>
+                            Stop run
+                        </button>
+                        <button className={styles.clearButton} onClick={handleStartNewRun}>
+                            New run
+                        </button>
+                    </div>
+                    <div ref={resultRef} className={styles.outputContainer}>
+                        <pre>{output}</pre>
+                    </div>
                 </div>
-            </div> }
-
+            )}
         </div>
-
-    )
-
-    function InputField({name,label,type,pattern,options} : InputFieldProps) {
-        console.log(pattern);
-        return (
-            <div className={styles.inputContainer}>
-                { type !== 'hidden' &&
-                    <label htmlFor={name}>{label}:</label>
-                }
-                { type === 'hidden' ? <input type='hidden' {...register(name)} /> : type === 'select' ? (<select {...register(name)}>
-                        {options!.map((e) => <option value={e}>{e}</option>)}</select>
-                ) : type === 'number' ? (
-                    <input {...register(name)} type="number" step="any"/>
-                ) : (
-                    <input {...register(name)} type="text" />
-                )
-                }
-            </div>
-        );
-    }
-
+    );
 }
 
+type InputFieldProps = {
+    name: keyof Para;
+    label: string;
+    type: string;
+    options?: string[];
+    value: string | number;
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+};
 
+function InputField({
+                        name,
+                        label,
+                        type,
+                        options,
+                        value,
+                        onChange,
+                    }: InputFieldProps) {
+    return (
+        <div className={styles.inputContainer}>
+            {type !== "hidden" && <label htmlFor={name}>{label}:</label>}
+            {type === "hidden" ? (
+                <input type="hidden" name={name} value={value} />
+            ) : type === "select" ? (
+                <select name={name} value={value} onChange={onChange}>
+                    {options!.map((e) => (
+                        <option key={e} value={e}>
+                            {e}
+                        </option>
+                    ))}
+                </select>
+            ) : (
+                <input name={name} type={type} value={value} onChange={onChange} disabled={true}  />
+            )}
+        </div>
+    );
+}

@@ -80,6 +80,10 @@ export default function Data() {
     setFilters(initialFilter);
   }
 
+  function handleSearch() {
+      fetchData(selectedModel);
+  }
+
   async function fetchData(selectedModel: string) {
     let dataList : EulerData[] | HydroData[] | MhdData[] = [];
 
@@ -338,7 +342,7 @@ export default function Data() {
         <option value="RBC">RBC</option>
         <option value="Scalar">Scalar</option>
       </select>
-      <button className={styles.searchButton}><FaSearch /> </button>
+      <button className={styles.searchButton} onClick={handleSearch}><FaSearch /> </button>
       
       <button className={styles.filterButton} onClick={toggleFilterWindow}><FaFilter color={showFilterWindow ? 'blue' : 'black'} /></button>
       {showFilterWindow &&

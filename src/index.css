@@ -5,7 +5,8 @@ body, html, #root {
   width: 100%;
   font-family: 'Inter', sans-serif;
   background-color: rgba(245,222,179,0.1);
-  overflow: auto;
+    /*background-color: white;*/
+    overflow: auto;
 }
 
 #root {

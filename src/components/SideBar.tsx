@@ -1,4 +1,5 @@
 import useUserStore from "@/globals/userStore";
+import {Link} from "@tanstack/react-router";
 
 export default function SideBar({show, closeSidebar} : {show: boolean | null, closeSidebar: () => void}) {
     console.log('show is ', show);
@@ -16,11 +17,18 @@ export default function SideBar({show, closeSidebar} : {show: boolean | null, cl
         closeSidebar();
         userStore.clearUser();
     }
+
+    function openDashboard() {
+
+    }
+
     return <div className={`menuItems ${showClassname}`}>
         <div><button onClick={() => {closeSidebar()}}>x</button></div>
         <ul >
             <li><button onClick={logout}>Logout</button></li>
+            <li><button onClick={openDashboard}><Link to="/dashboard">Dashboard</Link></button></li>
             <li>Settings</li>
+
         </ul>
     </div>
 }
