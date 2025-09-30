@@ -19,6 +19,7 @@ import HydroModel from "@/pages/models/HydroModel.tsx";
 import EulerModel from "@/pages/models/EulerModel.tsx";
 import MhdModel from "@/pages/models/MhdModel.tsx";
 import RbcModel from "@/pages/models/RbcModel.tsx";
+import {RegistrationSuccess} from "@/pages/RegistrationSuccess.tsx";
 
 const rootRoute = createRootRoute({component:Root})
 const homeRoute = createRoute({
@@ -109,7 +110,13 @@ const rbcModelRoute = createRoute({
     }
 )
 
-const routeTree = rootRoute.addChildren([homeRoute, aboutRoute, dataRoute,modelsRoute,hydroDemo,mhdDemo,demo,loginRoute, signupRoute,dashboardRoute,eulerModelRoute,hydroModelRoute,mhdModelRoute,rbcModelRoute])
+const signupSuccessRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/signup/success',
+    component: RegistrationSuccess
+})
+
+const routeTree = rootRoute.addChildren([homeRoute, aboutRoute, dataRoute,modelsRoute,hydroDemo,mhdDemo,demo,loginRoute, signupRoute, signupSuccessRoute,dashboardRoute,eulerModelRoute,hydroModelRoute,mhdModelRoute,rbcModelRoute])
 
 export const router = createRouter({routeTree})
 

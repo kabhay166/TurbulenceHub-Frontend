@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 import styles from "./Demo.module.css";
 import { useParams } from "@tanstack/react-router";
-import { RunPath } from "@/global_configurations.ts";
 import { FaArrowRight} from "react-icons/fa";
+import AppConfig from "../../config.ts";
 
 type Para = {
     kind: string;
@@ -26,20 +26,20 @@ const initialPara: Para = {
     device: "CPU",
     device_rank: 0,
     dimension: 2,
-    Nx: 64,
+    Nx: 128,
     Ny: 1,
-    Nz: 64,
+    Nz: 128,
     nu: 0.1,
     kappa: 0.1,
     eta: 0.1,
     time_scheme: "EULER",
     t_initial: 0,
     t_final: 0.1,
-    dt: 0.001,
+    dt: 0.002,
 };
 
 const dimensionOptions = ["2","3"];
-const gridOptions = ["64"];
+const gridOptions = ["128"];
 const timeSchemeOptions = ["EULER", "RK2", "RK4"];
 
 export default function Demo() {
@@ -74,7 +74,7 @@ export default function Demo() {
             socket.close();
         }
 
-        const ws = new WebSocket(RunPath);
+        const ws = new WebSocket(AppConfig.getRunUrl());
 
         ws.onopen = () => {
             console.log("WebSocket connected");

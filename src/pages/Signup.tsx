@@ -1,8 +1,8 @@
 import { useState } from "react";
 import styles from "./Signup.module.css"
 import { Link } from "@tanstack/react-router";
-import useUserStore from "@/globals/userStore";
 import { useNavigate } from "@tanstack/react-router";
+import AppConfig from "../../config.ts";
 
 export function Signup() {
 
@@ -10,7 +10,6 @@ export function Signup() {
     const [password,setPassword] = useState("");
     const [confirmPassword,setConfirmPassword] = useState("");
     const [email,setEmail] = useState("");
-    const userStore = useUserStore();
     const navigate = useNavigate();
 
     async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
@@ -20,7 +19,7 @@ export function Signup() {
         }
 
         try {
-        const signupResult: Response = await fetch("http://localhost:8081/user/signup", {
+        const signupResult: Response = await fetch(AppConfig.getSignupUrl(), {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -35,13 +34,7 @@ export function Signup() {
         
         if(signupResult.ok) {
             console.log("User created");
-            const user = await signupResult.json();
-            const username: string = user["username"];
-            const email: string = user["email"];
-            const token: string = user["token"];
-            console.log(username,email,token);
-            userStore.setUser({username: username, email: email, token: token});
-            navigate({ to: "/" });
+            navigate({ to: "/signup/success" });
         }
         
         } catch(e: unknown) {

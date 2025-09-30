@@ -14,17 +14,24 @@ export default function Models() {
   )
 }
 
+type ModelType = 'Euler'|'Hydro'|'MHD'|'RBC';
 
+const modelRouteMap: Record<ModelType, "/models/euler" | "/models/hydro" | "/models/mhd" | "/models/rbc"> = {
+    Euler: "/models/euler",
+    Hydro: "/models/hydro",
+    MHD: "/models/mhd",
+    RBC: "/models/rbc",
+};
 
-function ModelSidebar() {
-    return <div className={styles.sidebar}>
-        <ul>
-            <li>Euler</li>
-            <li>Hydro</li>
-            <li>MHD</li>
-        </ul>
-    </div>
-}
+// function ModelSidebar() {
+//     return <div className={styles.sidebar}>
+//         <ul>
+//             <li>Euler</li>
+//             <li>Hydro</li>
+//             <li>MHD</li>
+//         </ul>
+//     </div>
+// }
 
 function ModelMain() {
     return <div className={styles.main}>
@@ -60,7 +67,7 @@ function ModelMain() {
 }
 
 
-function ModelItem({title,content,kind} : {title:string, content: string,kind:string}) {
+function ModelItem({title,content,kind} : {title:ModelType, content: string,kind:string}) {
     return <div className={styles.modelItem}>
         <h2>{title}</h2>
         <div>
@@ -71,7 +78,7 @@ function ModelItem({title,content,kind} : {title:string, content: string,kind:st
             <div className={styles.buttonContainer}>
 
                 <button>
-                    <Link to={`/models/${title.toLowerCase()}`}>Learn More <FaArrowRight /></Link>
+                    <Link to={modelRouteMap[`${title}`]}>Learn More <FaArrowRight /></Link>
                 </button>
                 <button>
                     <Link to='/demo/$kind' params={{kind:kind}}>Try this model <FaArrowRight /></Link>

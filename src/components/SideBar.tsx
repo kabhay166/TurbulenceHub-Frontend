@@ -1,8 +1,10 @@
 import useUserStore from "@/globals/userStore";
-import {Link} from "@tanstack/react-router";
+import {Link, useNavigate} from "@tanstack/react-router";
 
 export default function SideBar({show, closeSidebar} : {show: boolean | null, closeSidebar: () => void}) {
     console.log('show is ', show);
+
+    const navigate = useNavigate();
     const userStore = useUserStore();
     if(show === null) {
         return <></>;
@@ -13,9 +15,12 @@ export default function SideBar({show, closeSidebar} : {show: boolean | null, cl
     }
     
 
-    function logout() {
+    async function logout(){
         closeSidebar();
+        localStorage.removeItem("token");
         userStore.clearUser();
+        await navigate({to: "/"});
+
     }
 
     function openDashboard() {

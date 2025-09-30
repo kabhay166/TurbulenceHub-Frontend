@@ -8,7 +8,10 @@ function NavBar({toggleSidebar} : {toggleSidebar: () => void}) {
     console.log('Username is: ' + userStore.user.username);
     return (
         <nav id="navbar">
-            
+
+            <h2>TurbulenceHub</h2>
+
+            {/*<h2><span style={{color:'orange'}}>T</span>urbulence<span style={{color:'orange'}}>H</span>ub</h2>*/}
             <ul>
                 <li>
                     <Link to="/">Home</Link>
@@ -31,9 +34,13 @@ function NavBar({toggleSidebar} : {toggleSidebar: () => void}) {
                 </li>
                 }
 
-                {
-                    userStore.user.username && <UserMenuItems toggleSidebar={toggleSidebar} />
-                }
+                <li>
+                    {
+                        userStore.user.username && <UserMenuItems toggleSidebar={toggleSidebar} />
+                    }
+                </li>
+
+
                 
                 
             </ul>

@@ -1,28 +1,39 @@
 .container {
     display: flex;
     flex-direction: column;
-    color: white;
+    color: black;
     width: 100%;
     height: calc(100vh - 72px);
     font-size: 24px;
     margin-left: auto;
     margin-right: auto;
     font-weight: 100;
-    background-image: url("../assets/convection.jpg");
+    /*background-image: url("../assets/convection.jpg");*/
     overflow-y: hidden;
     /*align-items: center;*/
     /*justify-content: center;*/
+    background-color: wheat;
 }
 
 .banner {
-    width: 100%;
-    height: 50%;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
+    margin-top: 5%;
+    width: 40%;
+    /*height: 50%;*/
+    text-align: start;
+    /*text-align: center;*/
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+    margin-left: 30px;
+
     font-size: clamp(1.2rem, 5vw, 3rem);
     /*background-image: url("../assets/convection.jpg");*/
+
     
+}
+
+.banner h1 {
+    font-size: 1.3em;
+    font-weight: 300;
 }
 
 .banner p {
@@ -44,6 +55,8 @@
     color: blue;
 }
 
+
+
 .data {
     height: 500px;
     background-color: blue;
@@ -51,30 +64,45 @@
 
 .buttonContainer {
     display: flex;
-    margin-right: auto;
-    margin-left: auto;
+    margin-left: 30px;
+    /*margin-right: auto;*/
+    /*margin-left: auto;*/
     gap: 10px;
     color: white;
+    font-weight: 200;
 }
 
 .buttonContainer button {
-    width: 250px;
+    width: 300px;
     height: 50px;
     font-size: 1.2em;
     padding: 5px;
+    background-color: inherit;
+    color: inherit;
 
 }
 
 .buttonContainer a {
-    color: white;
+    color: black;
     text-decoration: none;
 }
 
-.buttonContainer button:first-of-type {
 
-    background-color: #55cf55;
+.modelsButton {
+    background-color: white;
 }
 
-.buttonContainer button:last-of-type {
+.modelsButton:hover {
+    background-color: #55cf55;
+    color: white;
+
+}
+
+.datasetButton {
+    background-color: white;
+}
+
+.datasetButton:hover {
     background-color: #3434ec;
+    color: white;
 }

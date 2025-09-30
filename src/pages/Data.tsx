@@ -3,7 +3,7 @@ import styles from './Data.module.css';
 import { FaSearch } from 'react-icons/fa';
 import { FaFilter } from 'react-icons/fa';
 import { FaDownload } from 'react-icons/fa';
-import {DataPath, DownloadPath} from "@/global_configurations.ts";
+import AppConfig from "../../config.ts";
 
 
 const eulerTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Inititial Time","Final Time","Download","Description"]
@@ -52,7 +52,7 @@ interface DataFilter {
 
 async function downloadData(model: string, id:number) {
   console.log(`downloading data: ${model}`)
-  window.location.href = `${DownloadPath}/${model}/${id}`;
+  window.location.href =  AppConfig.getDownloadUrl(model,id) //`${DownloadPath}/${model}/${id}`;
 }
 
 
@@ -88,7 +88,7 @@ export default function Data() {
     let dataList : EulerData[] | HydroData[] | MhdData[] = [];
 
     try {
-    const dataResponse : Response = await fetch(`${DataPath}/${selectedModel.toLowerCase()}`,{
+    const dataResponse : Response = await fetch(`${AppConfig.getDataUrl()}/${selectedModel.toLowerCase()}`,{
       method: "GET"
     });
     
@@ -126,7 +126,7 @@ export default function Data() {
     
     try {
     
-    const dataResponse : Response = await fetch(`${DataPath}/${model.toLowerCase()}`,{
+    const dataResponse : Response = await fetch(`${AppConfig.getDataUrl()}/${model.toLowerCase()}`,{
       method: "GET"
     });
     
