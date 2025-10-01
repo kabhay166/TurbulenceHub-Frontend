@@ -36,6 +36,10 @@ const AppConfig = {
             case "PROD":
                 return "wss://turbulencehub.in/ws/tarang-demo"
         }
+    },
+
+    getPasswordResetUrl() {
+        return `${this.getBaseUrl()}/user/password-reset`;
     }
 }
 
