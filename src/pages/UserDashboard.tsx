@@ -1,6 +1,7 @@
 import styles from "./UserDashboard.module.css";
 import {useState} from "react";
 import PieChart from "../components/PieChart.tsx";
+import defaultUserImg from "../assets/default_user_image.jpg";
 
 export default function UserDashboard() {
 
@@ -38,7 +39,7 @@ function Card({label, value} : {label:string, value:string}) {
 
 function UserCard() {
     return <div className={styles.userCard}>
-        <img width={24} height={24} src="../../public/default_user_image.jpg" alt="User image"/>
+        <img width={24} height={24} src={defaultUserImg} alt="User image"/>
         <p>Hi, Username</p>
     </div>
 }
