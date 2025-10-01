@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "@tanstack/react-router"
 import styles from "./Login.module.css"
 import {type FormEvent, useState} from "react";
-import useUserStore from "@/globals/userStore";
-import PopUp from "@/components/PopUp.tsx";
+import useUserStore from "@/globals/userStore.ts";
 import {FaArrowLeft} from "react-icons/fa";
-import AppConfig from "../../config.ts";
+import AppConfig from "../../../config.ts";
+import {useToast} from "@/contexts/ToastContext.tsx";
 
 interface  User {
     username:string,
@@ -16,10 +16,9 @@ export function Login() {
 
     const userStore = useUserStore();
     const navigate = useNavigate();
-    const [showPopUp,setShowPopUp] = useState<boolean>(false);
-    const [popUpText,setPopUpText] = useState<string>('');
     const [showOtp,setShowOtp] = useState<boolean>(false);
     const [user,setUser] = useState<User>({username: '',password: '',otp:null})
+    const {addToast} = useToast();
 
     async function handleLogin(e:React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -56,16 +55,17 @@ export function Login() {
                 localStorage.setItem('token',token);
                 console.log(username,email,token);
                 userStore.setUser({username: username, email: email});
-                setShowPopUp(true);
                 await navigate({to: "/"});
+                addToast('login successful');
             } else {
                 const errorMessage = responseJson["error"]
-                setPopUpText(errorMessage);
-                setShowPopUp(true);
+
+                addToast(errorMessage);
                 console.log("Could not log in");
             }
 
         } catch(e:unknown) {
+            addToast(`An error occured: ${e}`)
             console.log(`An error occured: ${e}`);
         }
     }
@@ -105,7 +105,7 @@ export function Login() {
         <div className={styles.loginContainer}>
             <h1>Login</h1>
 
-            {!showOtp && <LoginForm handleLogin={handleLogin} username={user.username} password={user.password} handleUsernameChange={handleUsernameChange} handlePasswordChange={handlePasswordChange} showPopUp={showPopUp} popUpText={popUpText} />
+            {!showOtp && <LoginForm handleLogin={handleLogin} username={user.username} password={user.password} handleUsernameChange={handleUsernameChange} handlePasswordChange={handlePasswordChange}/>
             }
 
             {showOtp && <OtpForm otp={user.otp} handleLogin={handleLogin} handleOtpChange={handleOtpChange} handleOTPPageClose={handleOTPPageClose} /> }
@@ -115,8 +115,8 @@ export function Login() {
 }
 
 
-function LoginForm({handleLogin,username,handleUsernameChange,password,handlePasswordChange,showPopUp,popUpText} :
-                   {handleLogin: (e: FormEvent<HTMLFormElement>) => Promise<void>, username:string,handleUsernameChange: (username:string) => void,password:string,handlePasswordChange: (password:string) => void, showPopUp: boolean,popUpText:string }) {
+function LoginForm({handleLogin,username,handleUsernameChange,password,handlePasswordChange} :
+                   {handleLogin: (e: FormEvent<HTMLFormElement>) => Promise<void>, username:string,handleUsernameChange: (username:string) => void,password:string,handlePasswordChange: (password:string) => void}) {
     return <>
     <form action="" method="post" onSubmit={handleLogin}>
         <label htmlFor="username">Username</label>
@@ -127,7 +127,8 @@ function LoginForm({handleLogin,username,handleUsernameChange,password,handlePas
             Log In
         </button>
     </form>
-    { showPopUp && <PopUp message={popUpText} /> }
+
+    <Link to="/user/password-reset">Forgot password?</Link>
     <Link to="/user/signup">Don't have an account? Click here to Sign up.</Link>
     </>;
 }

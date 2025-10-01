@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./Signup.module.css"
 import { Link } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
-import AppConfig from "../../config.ts";
+import AppConfig from "../../../config.ts";
 
 export function Signup() {
 
