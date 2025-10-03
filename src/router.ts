@@ -80,7 +80,7 @@ const signupRoute = createRoute({
 
 const passwordResetRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: "/user/password-reset",
+    path: "/user/reset-password",
     component: PasswordReset,
 })
 

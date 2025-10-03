@@ -128,7 +128,7 @@ function LoginForm({handleLogin,username,handleUsernameChange,password,handlePas
         </button>
     </form>
 
-    <Link to="/user/password-reset">Forgot password?</Link>
+    <Link to="/user/reset-password">Forgot password?</Link>
     <Link to="/user/signup">Don't have an account? Click here to Sign up.</Link>
     </>;
 }

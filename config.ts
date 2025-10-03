@@ -39,7 +39,7 @@ const AppConfig = {
     },
 
     getPasswordResetUrl() {
-        return `${this.getBaseUrl()}/user/password-reset`;
+        return `${this.getBaseUrl()}/user/reset-password`;
     }
 }
 

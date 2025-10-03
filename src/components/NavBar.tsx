@@ -9,9 +9,9 @@ function NavBar({toggleSidebar} : {toggleSidebar: () => void}) {
     return (
         <nav id="navbar">
 
-            <h2>TurbulenceHub</h2>
+            {/*<h2>TurbulenceHub</h2>*/}
 
-            {/*<h2><span style={{color:'orange'}}>T</span>urbulence<span style={{color:'orange'}}>H</span>ub</h2>*/}
+            <h2><span style={{color:'orange'}}>T</span>urbulence<span style={{color:'orange'}}>H</span>ub</h2>
             <ul>
                 <li>
                     <Link to="/">Home</Link>
