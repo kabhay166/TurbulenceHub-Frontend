@@ -17,7 +17,7 @@ export default function SideBar({show, closeSidebar} : {show: boolean | null, cl
 
     async function logout(){
         closeSidebar();
-        localStorage.removeItem("token");
+        localStorage.removeItem("accessToken");
         userStore.clearUser();
         await navigate({to: "/"});
 

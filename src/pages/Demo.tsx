@@ -53,6 +53,8 @@ export default function Demo() {
     const [running, setRunning] = useState(false);
     const resultRef = useRef<HTMLDivElement>(null);
 
+    const token = localStorage.getItem("accessToken");
+
     function handleChange(
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) {
@@ -78,6 +80,7 @@ export default function Demo() {
 
         ws.onopen = () => {
             console.log("WebSocket connected");
+            ws.send(`Token:${token}`);
             ws.send(JSON.stringify(para));
         };
 

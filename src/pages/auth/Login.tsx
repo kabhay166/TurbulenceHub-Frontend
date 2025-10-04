@@ -52,7 +52,7 @@ export function Login() {
                     return;
                 }
 
-                localStorage.setItem('token',token);
+                localStorage.setItem('accessToken',token);
                 console.log(username,email,token);
                 userStore.setUser({username: username, email: email});
                 await navigate({to: "/"});
