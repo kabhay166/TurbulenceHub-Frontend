@@ -1,17 +1,58 @@
 import styles from "./UserDashboard.module.css";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import PieChart from "../components/PieChart.tsx";
 import defaultUserImg from "../assets/default_user_image.jpg";
+import AppConfig from "../../config.ts";
+
+interface RunData  {
+    kind:string,
+    dimension: number,
+    timeOfRun: string,
+}
+
+
+// interface ChartItem {
+//     label: string,
+//     value: number
+// }
+
+// type ChartData = ChartItem[];
 
 export default function UserDashboard() {
 
     const [selectedSection,setSelectedSection] = useState('Runs');
+
+    const [allRunData,setAllRunData] = useState<RunData[]>([]);
 
     function changeSection(section:string) {
         if(section !== selectedSection) {
             setSelectedSection(section);
         }
     }
+
+
+    async function getAllRuns() {
+        const response = await fetch(`${AppConfig.getBaseUrl()}/dashboard/allRuns`,
+
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("accessToken")
+                }
+            }
+            );
+
+        if(response.ok) {
+            const runsData = await response.json();
+            setAllRunData(runsData);
+
+        }
+    }
+
+    useEffect(() => {
+        getAllRuns();
+    },[])
+
     return <div className={styles.container}>
         <div className={styles.sidebar}>
 
@@ -24,7 +65,7 @@ export default function UserDashboard() {
 
         </div>
 
-        {selectedSection === 'Runs' && <RunSection />}
+        {selectedSection === 'Runs' && <RunSection runData={allRunData} />}
 
 
     </div>
@@ -45,61 +86,94 @@ function UserCard() {
 }
 
 
-function RunSection() {
+function RunSection({runData} : {runData: RunData[]}) {
+
+    const [type,setType] = useState("KIND");
+
+    let numHydroRuns : number = 0;
+    let numMhdRuns : number = 0;
+
+    let num2DRuns : number = 0;
+    let num3DRuns : number = 0;
+
+
+    runData.forEach((item:RunData)=> {
+        if(item.kind.toLowerCase() == "hydro") {
+            numHydroRuns += 1
+        } else if(item.kind.toLowerCase() == "mhd") {
+            numMhdRuns += 1;
+        }
+
+        if(item.dimension == 2) {
+            num2DRuns += 1;
+        } else if(item.dimension == 3) {
+            num3DRuns += 1;
+        }
+    });
+
+
+    const kindPieChartData = [
+        {label: "Hydro",value: numHydroRuns},
+        {label: "Mhd", value: numMhdRuns},
+    ];
+
+    const dimensionPieChartData = [
+        {label: "2D", value: num2DRuns},
+        {label: "3D", value: num3DRuns},
+    ];
+
+    const topCards = {"Today": 0, "This week": 0, "This month" : 0, "This year" : 0};
+
+    runData.forEach((runItem) => {
+        if(new Date(Date.parse(runItem.timeOfRun)).getDate() == new Date().getDate()) {
+            topCards["Today"] += 1;
+        }
+
+        if(new Date(Date.parse(runItem.timeOfRun)).getMonth() == new Date().getMonth()) {
+            topCards["This month"] += 1;
+        }
+
+        if(new Date(Date.parse(runItem.timeOfRun)).getFullYear() == new Date().getFullYear()) {
+            topCards["This year"] += 1;
+        }
+
+    });
+
     return <div className={styles.main}>
 
         <div className={styles.cardContainer}>
-            <Card label={'Today'} value={'4'} />
-            <Card label={'This week'} value={'10'} />
-            <Card label={'This month'} value={'20'} />
-            <Card label={'This year'} value={'50'} />
+
+            <Card label={'Today'} value={topCards["Today"].toString()} />
+            <Card label={'This week'} value={topCards["This week"].toString()} />
+            <Card label={'This month'} value={topCards["This month"].toString()} />
+            <Card label={'This year'} value={topCards["This year"].toString()} />
         </div>
 
-        <div className={styles.mainContainer}>
-            <PieChart className={styles.chartContainer} />
-            <RecentContainer />
-        </div>
+
+
+            <div className={styles.mainContainer}>
+                <select value={type} onChange={(e) => setType(e.target.value)}>
+                    <option value="KIND">KIND</option>
+                    <option value="DIMENSION">DIMENSION</option>
+                </select>
+                <div className={styles.chartAndRecentContainer}>
+                    <PieChart data={ type == "KIND" ? kindPieChartData : dimensionPieChartData} className={styles.chartContainer} />
+                    <RecentContainer runData={runData} />
+                </div>
+
+            </div>
+
 
     </div>
 }
 
 
-
-
-const recentActivities = [
-    {
-        title: "Hydro",
-        dimension: "3D",
-        date: "22/04/2025"
-    },
-    {
-        title: "MHD",
-        dimension: "2D",
-        date: "18/07/2025"
-    },
-    {
-        title: "Euler",
-        dimension: "3D",
-        date: "02/06/2025"
-    },
-    {
-        title: "Hydro",
-        dimension: "3D",
-        date: "22/04/2025"
-    },
-    {
-        title: "Hydro",
-        dimension: "3D",
-        date: "22/04/2025"
-    },
-]
-
-function RecentContainer() {
+function RecentContainer({runData} : {runData: RunData[]}) {
     return <div className={styles.recentContainer}>
         <p>Recent Activity</p>
         <div className={styles.recentCardContainer}>
             {
-                recentActivities.map(activity => {
+                runData.map(activity => {
                     return  <RecentCard cardData={activity} />
                 })
             }
@@ -108,22 +182,15 @@ function RecentContainer() {
     </div>
 }
 
-
-type Activity = {
-    title: string;
-    dimension: string;
-    date: string;
-};
-
-function RecentCard({ cardData }: { cardData: Activity }) {
+function RecentCard({ cardData }: { cardData: RunData }) {
     return (
         <div className={styles.recentCard}>
             <div>
-                <p>{cardData.title}</p>
-                <p>{cardData.dimension}</p>
+                <p>{cardData.kind}</p>
+                <p>{cardData.dimension}D</p>
             </div>
             <div>
-                <p>{cardData.date}</p>
+                <p>{new Date(Date.parse(cardData.timeOfRun)).toDateString()}</p>
             </div>
         </div>
     );
