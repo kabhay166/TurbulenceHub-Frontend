@@ -10,14 +10,6 @@ interface RunData  {
     timeOfRun: string,
 }
 
-
-// interface ChartItem {
-//     label: string,
-//     value: number
-// }
-
-// type ChartData = ChartItem[];
-
 export default function UserDashboard() {
 
     const [selectedSection,setSelectedSection] = useState('Runs');
@@ -137,6 +129,18 @@ function RunSection({runData} : {runData: RunData[]}) {
             topCards["This year"] += 1;
         }
 
+        const startOfWeek = new Date();
+        startOfWeek.setDate(startOfWeek.getDate() - (startOfWeek.getDay() + 6)%7);
+        startOfWeek.setHours(0,0,0,0,);
+
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        endOfWeek.setHours(23,59,59,999);
+
+        if(new Date(runItem.timeOfRun) >= startOfWeek && new Date(runItem.timeOfRun) <= endOfWeek) {
+            topCards["This week"] += 1;
+        }
+
     });
 
     return <div className={styles.main}>
@@ -149,8 +153,6 @@ function RunSection({runData} : {runData: RunData[]}) {
             <Card label={'This year'} value={topCards["This year"].toString()} />
         </div>
 
-
-
             <div className={styles.mainContainer}>
                 <select value={type} onChange={(e) => setType(e.target.value)}>
                     <option value="KIND">KIND</option>
@@ -160,10 +162,7 @@ function RunSection({runData} : {runData: RunData[]}) {
                     <PieChart data={ type == "KIND" ? kindPieChartData : dimensionPieChartData} className={styles.chartContainer} />
                     <RecentContainer runData={runData} />
                 </div>
-
             </div>
-
-
     </div>
 }
 
