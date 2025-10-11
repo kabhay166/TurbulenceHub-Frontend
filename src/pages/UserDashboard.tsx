@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import PieChart from "../components/PieChart.tsx";
 import defaultUserImg from "../assets/default_user_image.jpg";
 import AppConfig from "../../config.ts";
+import useUserStore from "@/globals/userStore.ts";
 
 interface RunData  {
     kind:string,
@@ -15,6 +16,8 @@ export default function UserDashboard() {
     const [selectedSection,setSelectedSection] = useState('Runs');
 
     const [allRunData,setAllRunData] = useState<RunData[]>([]);
+
+    const userStore = useUserStore();
 
     function changeSection(section:string) {
         if(section !== selectedSection) {
@@ -48,11 +51,11 @@ export default function UserDashboard() {
     return <div className={styles.container}>
         <div className={styles.sidebar}>
 
-            <UserCard />
+            <UserCard username={userStore.user.username ?? 'User'} />
             <ul>
                 <li onClick={() => changeSection('Runs')}>Runs</li>
-                <li onClick={() => changeSection('A')}>B</li>
-                <li>C</li>
+                <li onClick={() => changeSection('A')}>A</li>
+                <li onClick={() => changeSection('B')}>B</li>
             </ul>
 
         </div>
@@ -70,10 +73,10 @@ function Card({label, value} : {label:string, value:string}) {
     </div>;
 }
 
-function UserCard() {
+function UserCard({username} : {username: string}) {
     return <div className={styles.userCard}>
         <img width={24} height={24} src={defaultUserImg} alt="User image"/>
-        <p>Hi, Username</p>
+        <p>Hi, {username}</p>
     </div>
 }
 

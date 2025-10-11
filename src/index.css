@@ -83,16 +83,26 @@ body, html, #root {
   right: 0;
   height: 100%;
   max-width: 200px;
-  background-color: black;
+  background-color: white;
   color: white;
-  /* padding: 1rem; */
   z-index: 1000;
 }
+
+.menuItems > div {
+    background-color: black;
+}
+
 .menuItems li {
   text-align: start;
   padding: 10px;
   list-style: none;
   text-decoration: none;
+}
+
+.menuItems button {
+    border: none;
+    background-color: inherit;
+    cursor: pointer;
 }
 
 

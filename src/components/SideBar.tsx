@@ -1,5 +1,6 @@
 import useUserStore from "@/globals/userStore";
 import {Link, useNavigate} from "@tanstack/react-router";
+import {FaTimes} from "react-icons/fa";
 
 export default function SideBar({show, closeSidebar} : {show: boolean | null, closeSidebar: () => void}) {
     console.log('show is ', show);
@@ -28,7 +29,7 @@ export default function SideBar({show, closeSidebar} : {show: boolean | null, cl
     }
 
     return <div className={`menuItems ${showClassname}`}>
-        <div><button onClick={() => {closeSidebar()}}>x</button></div>
+        <div><button onClick={() => {closeSidebar()}}> <FaTimes color={'white'} /> </button></div>
         <ul >
             <li><button onClick={logout}>Logout</button></li>
             <li><button onClick={openDashboard}><Link to="/dashboard">Dashboard</Link></button></li>
