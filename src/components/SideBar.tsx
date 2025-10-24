@@ -24,16 +24,14 @@ export default function SideBar({show, closeSidebar} : {show: boolean | null, cl
 
     }
 
-    function openDashboard() {
-
-    }
 
     return <div className={`menuItems ${showClassname}`}>
         <div><button onClick={() => {closeSidebar()}}> <FaTimes color={'white'} /> </button></div>
         <ul>
-            <li><button onClick={logout}>Logout</button></li>
-            <li><button onClick={openDashboard}><Link to="/dashboard">Dashboard</Link></button></li>
+            <li><button ><Link to="/active-runs">Active Runs</Link></button></li>
+            <li><button ><Link to="/dashboard">Dashboard</Link></button></li>
             <li>Settings</li>
+            <li><button onClick={logout}>Logout</button></li>
 
         </ul>
     </div>

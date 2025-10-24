@@ -38,6 +38,15 @@ const AppConfig = {
         }
     },
 
+    getRunOutputUrl() {
+        switch (PROFILE) {
+            case "DEV":
+                return "ws://localhost:8081/ws/get-run-output";
+            case "PROD":
+                return "wss://turbulencehub.in/ws/get-run-output"
+        }
+    },
+
     getPasswordResetUrl() {
         return `${this.getBaseUrl()}/user/reset-password`;
     }

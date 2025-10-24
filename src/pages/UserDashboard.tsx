@@ -54,7 +54,6 @@ export default function UserDashboard() {
             <UserCard username={userStore.user.username ?? 'User'} />
             <ul>
                 <li onClick={() => changeSection('Runs')}>Runs</li>
-                <li onClick={() => changeSection('A')}>A</li>
                 <li onClick={() => changeSection('B')}>B</li>
             </ul>
 

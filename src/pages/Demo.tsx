@@ -286,7 +286,7 @@ function InputField({
                     ))}
                 </select>
             ) : (
-                <input name={name} type={type} value={value} onChange={onChange} disabled={true}  />
+                <input name={name} type={type} value={value} onChange={onChange} disabled={false}  />
             )}
         </div>
     );
