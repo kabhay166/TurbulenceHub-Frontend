@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import {useState, useRef, useEffect} from "react";
 import styles from "./Demo.module.css";
 import { useParams } from "@tanstack/react-router";
 import { FaArrowRight} from "react-icons/fa";
@@ -54,6 +54,15 @@ export default function Demo() {
     const resultRef = useRef<HTMLDivElement>(null);
 
     const token = localStorage.getItem("accessToken");
+
+    useEffect(() => {
+        return () => {
+            if (socket && socket.readyState !== WebSocket.CLOSED) {
+                console.log("Closing WebSocket on unmount");
+                socket.close();
+            }
+        };
+    }, [socket]);
 
     function handleChange(
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

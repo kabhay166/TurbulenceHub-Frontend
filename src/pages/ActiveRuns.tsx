@@ -1,6 +1,3 @@
-// show a list of active runs
-// when the user clicks on any active run show a page that shows the output of the run along with a button to stop it.
-
 import {useEffect, useRef, useState} from "react";
 import AppConfig from "../../config.ts";
 import styles from "@/pages/ActiveRuns.module.css";
@@ -22,7 +19,6 @@ export default function ActiveRuns() {
     const [output, setOutput] = useState("");
     const [socket, setSocket] = useState<WebSocket | null>(null);
     const resultRef = useRef<HTMLDivElement>(null);
-    const [currentRunId,setCurrentRunId] = useState<string>("");
 
 
     async function getActiveRuns() {
@@ -65,17 +61,26 @@ export default function ActiveRuns() {
     function changeMode(mode:string,runId:string = "") {
 
         if(mode == "output" && runId != "") {
-                setCurrentRunId(runId);
                 setMode(mode);
                 setUpWebSocket(runId);
         } else if(mode == "list") {
+            setOutput("");
+            if(socket && socket.readyState !== WebSocket.CLOSED) {
+                socket.close();
+            }
             setMode(mode);
         }
+    }
+
+    function handleRunStop() {
+        socket?.send("stop");
+        setSocket(null);
     }
 
 
     function setUpWebSocket(runId:string) {
         if (socket && socket.readyState !== WebSocket.CLOSED) {
+            setOutput("");
             socket.close();
         }
 
@@ -88,6 +93,9 @@ export default function ActiveRuns() {
 
         ws.onmessage = (event) => {
             setOutput((prev) => prev + event.data + "\n");
+            if(resultRef.current) {
+                resultRef.current.scrollTop = resultRef.current.scrollHeight;
+            }
         };
 
         ws.onerror = (err) => {
@@ -97,6 +105,9 @@ export default function ActiveRuns() {
 
         ws.onclose = () => {
             console.log("WebSocket closed");
+            if(resultRef.current) {
+                resultRef.current.scrollTop = resultRef.current.scrollHeight;
+            }
         };
 
         setSocket(ws);
@@ -107,6 +118,15 @@ export default function ActiveRuns() {
     useEffect(() => {
         getActiveRuns();
     },[])
+
+    useEffect(() => {
+        return () => {
+            if (socket && socket.readyState !== WebSocket.CLOSED) {
+                console.log("Closing WebSocket on unmount");
+                socket.close();
+            }
+        };
+    }, [socket]);
 
 
     return <div className={styles.container}>
@@ -123,7 +143,7 @@ export default function ActiveRuns() {
     function OutputWindow() {
         return <div className={styles.outputWindow}>
                 <div>
-                    <button className={styles.clearButton} onClick={() => {stopRun(currentRunId)}}>
+                    <button className={styles.clearButton} onClick={() => { handleRunStop()}}>
                         Stop run
                     </button>
                 </div>
