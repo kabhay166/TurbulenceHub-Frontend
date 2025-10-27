@@ -4,6 +4,7 @@ import PieChart from "../components/PieChart.tsx";
 import defaultUserImg from "../assets/default_user_image.jpg";
 import AppConfig from "../../config.ts";
 import useUserStore from "@/globals/userStore.ts";
+import ActiveRuns from "@/pages/ActiveRuns.tsx";
 
 interface RunData  {
     kind:string,
@@ -13,9 +14,10 @@ interface RunData  {
 
 export default function UserDashboard() {
 
-    const [selectedSection,setSelectedSection] = useState('Runs');
+    const [selectedSection,setSelectedSection] = useState('ActiveRuns');
 
     const [allRunData,setAllRunData] = useState<RunData[]>([]);
+    const [recentRunData,setRecentRunData] = useState<RunData[]>([]);
 
     const userStore = useUserStore();
 
@@ -44,8 +46,27 @@ export default function UserDashboard() {
         }
     }
 
+    async function getRecentRuns() {
+        const response = await fetch(`${AppConfig.getBaseUrl()}/dashboard/recentRuns`,
+
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("accessToken")
+                }
+            }
+        );
+
+        if(response.ok) {
+            const runsData = await response.json();
+            setRecentRunData(runsData);
+
+        }
+    }
+
     useEffect(() => {
         getAllRuns();
+        getRecentRuns();
     },[])
 
     return <div className={styles.container}>
@@ -53,13 +74,15 @@ export default function UserDashboard() {
 
             <UserCard username={userStore.user.username ?? 'User'} />
             <ul>
-                <li onClick={() => changeSection('Runs')}>Runs</li>
-                <li onClick={() => changeSection('B')}>B</li>
+                <li onClick={() => changeSection('ActiveRuns')}>Active Runs</li>
+                <li onClick={() => changeSection('CompletedRuns')}>Completed Runs</li>
+                <li onClick={() => changeSection('RunStatistics')}>Run Statistics</li>
             </ul>
 
         </div>
 
-        {selectedSection === 'Runs' && <RunSection runData={allRunData} />}
+        {selectedSection === 'ActiveRuns' && <ActiveRuns /> }
+        {selectedSection === 'RunStatistics' && <RunSection runData={allRunData} recentRunData={recentRunData} />}
 
 
     </div>
@@ -80,7 +103,7 @@ function UserCard({username} : {username: string}) {
 }
 
 
-function RunSection({runData} : {runData: RunData[]}) {
+function RunSection({runData,recentRunData} : {runData: RunData[],recentRunData: RunData[]}) {
 
     const [type,setType] = useState("KIND");
 
@@ -162,7 +185,7 @@ function RunSection({runData} : {runData: RunData[]}) {
                 </select>
                 <div className={styles.chartAndRecentContainer}>
                     <PieChart data={ type == "KIND" ? kindPieChartData : dimensionPieChartData} className={styles.chartContainer} />
-                    <RecentContainer runData={runData} />
+                    <RecentContainer runData={recentRunData} />
                 </div>
             </div>
     </div>
@@ -192,6 +215,7 @@ function RecentCard({ cardData }: { cardData: RunData }) {
             </div>
             <div>
                 <p>{new Date(Date.parse(cardData.timeOfRun)).toDateString()}</p>
+                <p>{new Date(Date.parse(cardData.timeOfRun)).toLocaleTimeString()}</p>
             </div>
         </div>
     );

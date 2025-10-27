@@ -12,14 +12,10 @@ interface RunInfo {
 }
 
 export default function ActiveRuns() {
-
     const [activeRuns, setActiveRuns] = useState<RunInfo[]>([]);
     const {addToast} = useToast();
-    const [mode,setMode] = useState<string>("list")
-    const [output, setOutput] = useState("");
-    const [socket, setSocket] = useState<WebSocket | null>(null);
-    const resultRef = useRef<HTMLDivElement>(null);
-
+    const [mode,setMode] = useState<string>("list");
+    const runIdRef = useRef<string>("");
 
     async function getActiveRuns() {
         const response = await fetch(`${AppConfig.getBaseUrl()}/active-runs`,
@@ -62,27 +58,88 @@ export default function ActiveRuns() {
 
         if(mode == "output" && runId != "") {
                 setMode(mode);
-                setUpWebSocket(runId);
+                runIdRef.current = runId;
+                // setUpWebSocket(runId);
         } else if(mode == "list") {
-            setOutput("");
-            if(socket && socket.readyState !== WebSocket.CLOSED) {
-                socket.close();
-            }
             setMode(mode);
+            getActiveRuns();
         }
     }
 
-    function handleRunStop() {
-        socket?.send("stop");
-        setSocket(null);
+    function handleRunStop(socket:WebSocket|null) {
+        if(socket == null || socket.readyState === WebSocket.CLOSED) {
+            return;
+        }
+        socket.send("stop");
+        socket.close();
     }
 
 
-    function setUpWebSocket(runId:string) {
-        if (socket && socket.readyState !== WebSocket.CLOSED) {
-            setOutput("");
-            socket.close();
-        }
+    useEffect(() => {
+        getActiveRuns();
+    },[])
+
+
+    return <div className={styles.container}>
+        {mode == "list" && <ListActiveRunsWindow /> }
+        {mode == "output" && <OutputWindow runId={runIdRef.current} changeMode={changeMode} handleRunStop={handleRunStop} />}
+    </div>
+
+    function ListActiveRunsWindow() {
+        return <div className={styles.activeRunListWindow}>
+            <h1>Currently Running Simulations</h1>
+            { activeRuns.length === 0 &&
+                <div className={styles.noRunContainer}>
+                    <p>There are no active runs currently.</p>
+                </div>
+            }
+
+            {
+                activeRuns.length !== 0 &&
+                <div className={styles.runContainer}>
+                    {activeRuns.map((runInfo:RunInfo)=> <ActiveRunItem runInfo={runInfo} key={runInfo.processInfoId} /> )}
+                </div>
+            }
+        </div>
+    }
+
+
+
+
+
+
+    function ActiveRunItem({runInfo}: {runInfo: RunInfo}) {
+        return <div className={styles.activeRunItem}>
+            <div className={styles.runInformation}>
+                <div>
+                    <p>{runInfo.kind}</p>
+                    <p>{runInfo.dimension}D</p>
+                </div>
+
+                <p>{runInfo.resolution}</p>
+                <div>
+                    <p>{runInfo.timeOfRun.split('_').slice(0,3).join('-')}</p>
+                    <p>{runInfo.timeOfRun.split('_').slice(3,6).join(':')}</p>
+                </div>
+            </div>
+
+            <div className={styles.actionButtons}>
+                <button onClick={() => {changeMode("output",runInfo.processInfoId)}}>See Output</button>
+                <button onClick={async ()=> { await stopRun(runInfo.processInfoId)}}>Stop Run</button>
+            </div>
+
+
+        </div>
+    }
+}
+
+
+function OutputWindow({runId,changeMode,handleRunStop} : {runId:string,changeMode: (mode: string, runId?: string) => void, handleRunStop: (socket: WebSocket) => void}) {
+    const socketRef = useRef<WebSocket|null>(null);
+    const [output, setOutput] = useState("");
+    const resultRef = useRef<HTMLDivElement>(null);
+
+    function setUpWebSocket() {
 
         const ws = new WebSocket(AppConfig.getRunOutputUrl());
 
@@ -110,76 +167,33 @@ export default function ActiveRuns() {
             }
         };
 
-        setSocket(ws);
+        socketRef.current = ws;
         console.log("Launching the run");
     }
 
-
     useEffect(() => {
-        getActiveRuns();
+        setUpWebSocket();
     },[])
 
-    useEffect(() => {
-        return () => {
-            if (socket && socket.readyState !== WebSocket.CLOSED) {
-                console.log("Closing WebSocket on unmount");
-                socket.close();
-            }
-        };
-    }, [socket]);
 
-
-    return <div className={styles.container}>
-        {mode == "list" && <ListActiveRunsWindow /> }
-        {mode == "output" && <OutputWindow />}
+    return <div className={styles.outputWindow}>
+        <div>
+            <button className={styles.clearButton} onClick={() => { changeMode("list")}}>
+                Go Back
+            </button>
+            <button className={styles.clearButton} onClick={() => {
+                if(socketRef.current === null) {
+                    return;
+                }
+                handleRunStop(socketRef.current);
+            }}>
+                Stop run
+            </button>
+        </div>
+        <div ref={resultRef} className={styles.outputContainer}>
+            <pre>{output}</pre>
+        </div>
     </div>
-
-    function ListActiveRunsWindow() {
-        return <>
-            {activeRuns.map((runInfo:RunInfo)=> <ActiveRunItem runInfo={runInfo} /> )}
-        </>
-    }
-
-    function OutputWindow() {
-        return <div className={styles.outputWindow}>
-                <div>
-                    <button className={styles.clearButton} onClick={() => { handleRunStop()}}>
-                        Stop run
-                    </button>
-                </div>
-                <div ref={resultRef} className={styles.outputContainer}>
-                    <pre>{output}</pre>
-                </div>
-        </div>
-    }
-
-    function ActiveRunItem({runInfo}: {runInfo: RunInfo}) {
-        return <div className={styles.activeRunItem}>
-            <div className={styles.runInformation}>
-                <div>
-                    <p>{runInfo.kind}</p>
-                    <p>{runInfo.dimension}D</p>
-                </div>
-
-                <p>{runInfo.resolution}</p>
-                <div>
-                    <p>{runInfo.timeOfRun.split('_').slice(0,3).join('-')}</p>
-                    <p>{runInfo.timeOfRun.split('_').slice(3,6).join(':')}</p>
-                </div>
-            </div>
-
-            <div className={styles.actionButtons}>
-                <button onClick={() => {changeMode("output",runInfo.processInfoId)}}>See Output</button>
-                <button onClick={async ()=> { await stopRun(runInfo.processInfoId)}}>Stop Run</button>
-            </div>
-
-
-        </div>
-    }
-
-
-
-
 }
 
 
