@@ -6,9 +6,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.banner}>
-        {/*<h1>TurbulenceHub</h1>*/}
           <h1>Your one stop destination for all things turbulence</h1>
-        {/*<p>Where passion meets turbulence</p>*/}
       </div>
 
 
@@ -18,24 +16,7 @@ export default function Home() {
     </div>
 
       
-      {/*<div className={styles.content}>*/}
-      {/*      <Models />*/}
-      {/*      <Data />*/}
-      {/*</div>*/}
-      
     </div>
   )
 }
 
-
-// function Models() {
-//     return <div className={styles.models}>
-//         <h2>Explore different Models</h2>
-//     </div>
-// }
-//
-// function Data() {
-//     return <div className={styles.data}>
-//         <h2>Download rich datasets</h2>
-//     </div>
-// }

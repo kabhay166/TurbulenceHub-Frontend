@@ -1,15 +1,25 @@
-import styles from "./UserDashboard.module.css";
+import styles from "../UserDashboard.module.css";
 import {useEffect, useState} from "react";
-import PieChart from "../components/PieChart.tsx";
-import defaultUserImg from "../assets/default_user_image.jpg";
-import AppConfig from "../../config.ts";
+import PieChart from "../../components/PieChart.tsx";
+import defaultUserImg from "../../assets/default_user_image.jpg";
+import AppConfig from "../../../config.ts";
 import useUserStore from "@/globals/userStore.ts";
 import ActiveRuns from "@/pages/ActiveRuns.tsx";
+import CompletedRuns from "@/pages/dashboard/CompletedRuns.tsx";
 
 interface RunData  {
     kind:string,
     dimension: number,
     timeOfRun: string,
+}
+
+
+interface CompletedRunData {
+    id:string,
+    kind:string,
+    dimension:string,
+    resolution:string,
+    timeOfRun:string,
 }
 
 export default function UserDashboard() {
@@ -18,6 +28,7 @@ export default function UserDashboard() {
 
     const [allRunData,setAllRunData] = useState<RunData[]>([]);
     const [recentRunData,setRecentRunData] = useState<RunData[]>([]);
+    const [completedRunData,setCompletedRunData] = useState<CompletedRunData[]>([]);
 
     const userStore = useUserStore();
 
@@ -64,9 +75,27 @@ export default function UserDashboard() {
         }
     }
 
+    async function getCompletedRuns() {
+        const response = await fetch(`${AppConfig.getBaseUrl()}/dashboard/completedRuns`,
+
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("accessToken")
+                }
+            }
+        );
+
+        if(response.ok) {
+            const runsData = await response.json();
+            setCompletedRunData(runsData);
+        }
+    }
+
     useEffect(() => {
         getAllRuns();
         getRecentRuns();
+        getCompletedRuns();
     },[])
 
     return <div className={styles.container}>
@@ -81,8 +110,12 @@ export default function UserDashboard() {
 
         </div>
 
-        {selectedSection === 'ActiveRuns' && <ActiveRuns /> }
-        {selectedSection === 'RunStatistics' && <RunSection runData={allRunData} recentRunData={recentRunData} />}
+        <div className={styles.mainContentContainer}>
+            {selectedSection === 'ActiveRuns' && <ActiveRuns /> }
+            {selectedSection === 'CompletedRuns' && <CompletedRuns completedRunData={completedRunData} /> }
+            {selectedSection === 'RunStatistics' && <RunStatistics runData={allRunData} recentRunData={recentRunData} />}
+        </div>
+
 
 
     </div>
@@ -103,7 +136,7 @@ function UserCard({username} : {username: string}) {
 }
 
 
-function RunSection({runData,recentRunData} : {runData: RunData[],recentRunData: RunData[]}) {
+function RunStatistics({runData,recentRunData} : {runData: RunData[],recentRunData: RunData[]}) {
 
     const [type,setType] = useState("KIND");
 
@@ -220,3 +253,31 @@ function RecentCard({ cardData }: { cardData: RunData }) {
         </div>
     );
 }
+
+
+// function CompletedRuns({ completedRunData } : { completedRunData : CompletedRunData[] }) {
+//     return (
+//         <div >
+//             <h1>Completed Runs</h1>
+//             <div className={styles.completedRunsContainer}>
+//                 {completedRunData.map((e) => <CompletedRunItem completedRunData={e} /> )}
+//             </div>
+//         </div>
+//     );
+// }
+//
+// function CompletedRunItem({completedRunData} : {completedRunData: CompletedRunData}) {
+//     return (
+//         <div className={styles.completedRunItem}>
+//             <div>
+//                 <p>{completedRunData.kind}</p>
+//                 <p>{completedRunData.dimension}D</p>
+//             </div>
+//             <div>
+//                 <p>{new Date(Date.parse(completedRunData.timeOfRun)).toDateString()}</p>
+//                 <p>{new Date(Date.parse(completedRunData.timeOfRun)).toLocaleTimeString()}</p>
+//             </div>
+//         </div>
+//     );
+// }
+

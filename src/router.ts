@@ -14,7 +14,7 @@ import MhdDemo from './pages/MhdDemo'
 import { Login } from '@/pages/auth/Login.tsx'
 import { Signup } from '@/pages/auth/Signup.tsx'
 import Demo from "@/pages/Demo.tsx";
-import UserDashboard from "@/pages/UserDashboard.tsx";
+import UserDashboard from "@/pages/dashboard/UserDashboard.tsx";
 import HydroModel from "@/pages/models/HydroModel.tsx";
 import EulerModel from "@/pages/models/EulerModel.tsx";
 import MhdModel from "@/pages/models/MhdModel.tsx";

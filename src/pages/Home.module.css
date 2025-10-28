@@ -8,27 +8,17 @@
     margin-left: auto;
     margin-right: auto;
     font-weight: 100;
-    /*background-image: url("../assets/convection.jpg");*/
     overflow-y: hidden;
-    /*align-items: center;*/
-    /*justify-content: center;*/
     background-color: wheat;
 }
 
 .banner {
     margin-top: 5%;
     width: 40%;
-    /*height: 50%;*/
+    min-width: 300px;
     text-align: start;
-    /*text-align: center;*/
-    /*margin-left: auto;*/
-    /*margin-right: auto;*/
     margin-left: 30px;
-
     font-size: clamp(1.2rem, 5vw, 3rem);
-    /*background-image: url("../assets/convection.jpg");*/
-
-    
 }
 
 .banner h1 {
@@ -37,7 +27,6 @@
 }
 
 .banner p {
-    /*color: brown;*/
     font-weight: 300;
 }
 
@@ -56,7 +45,6 @@
 }
 
 
-
 .data {
     height: 500px;
     background-color: blue;
@@ -65,15 +53,14 @@
 .buttonContainer {
     display: flex;
     margin-left: 30px;
-    /*margin-right: auto;*/
-    /*margin-left: auto;*/
     gap: 10px;
     color: white;
     font-weight: 200;
 }
 
 .buttonContainer button {
-    width: 300px;
+    max-width: 300px;
+    min-width: 250px;
     height: 50px;
     font-size: 1.2em;
     padding: 5px;
@@ -105,4 +92,16 @@
 .datasetButton:hover {
     background-color: #3434ec;
     color: white;
+}
+
+@media screen and (max-width: 578px) {
+    .buttonContainer {
+        width: 280px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .buttonContainer button {
+        width: 280px;
+    }
 }

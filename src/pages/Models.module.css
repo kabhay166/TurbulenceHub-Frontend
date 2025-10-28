@@ -2,18 +2,18 @@
     margin-top: 10px;
     text-align: center;
     width: 70%;
-    height: 85vh;
-    min-width: 300px;
+    max-height: 85vh;
+    min-width: 900px;
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
-    /*padding: 20px;*/
     color: white;
     background-color: #dc5151;
     display: flex;
     flex-direction: row;
     padding-top: 0;
-
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 .sidebar {
@@ -27,7 +27,6 @@
 }
 
 .main {
-    /*padding: 20px;*/
     padding-top: 0;
     display: flex;
     flex-direction: column;
@@ -53,10 +52,8 @@
 
 .modelsContainer {
     flex: 1;
-    /*padding: 20px;*/
     margin-right: auto;
     margin-left: auto;
-    /*margin-top: 20px;*/
     display: grid;
     grid-template-columns: 1fr 1fr;
     row-gap: 20px;
@@ -73,7 +70,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 270px;
+    min-height: 270px;
 }
 
 
@@ -96,7 +93,7 @@
     padding-left: 0;
     display: flex;
     flex-direction: row;
-    align-items: baseline;
+    align-items: center;
     justify-content: flex-start;
     gap: 10px;
 }
@@ -128,4 +125,45 @@
 
 a {
     text-decoration: none;
+}
+
+@media screen and (max-width: 900px){
+
+    .container {
+        margin-top: 10px;
+        text-align: center;
+        width: 90%;
+        height: 85vh;
+        min-width: 300px;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+        color: white;
+        background-color: #dc5151;
+        display: flex;
+        flex-direction: row;
+        padding-top: 0;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    .modelsContainer {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modelItem {
+        background-color: white;
+        text-align: left;
+        color: black;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 80%;
+        min-width: 290px;
+    }
+
 }

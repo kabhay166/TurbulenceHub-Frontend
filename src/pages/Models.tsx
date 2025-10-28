@@ -23,20 +23,9 @@ const modelRouteMap: Record<ModelType, "/models/euler" | "/models/hydro" | "/mod
     RBC: "/models/rbc",
 };
 
-// function ModelSidebar() {
-//     return <div className={styles.sidebar}>
-//         <ul>
-//             <li>Euler</li>
-//             <li>Hydro</li>
-//             <li>MHD</li>
-//         </ul>
-//     </div>
-// }
-
 function ModelMain() {
     return <div className={styles.main}>
         <h1>Models</h1>
-        {/*<p>In our study of turbulence we deal with the following models.</p>*/}
 
         <div className={styles.modelsContainer}>
 
