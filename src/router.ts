@@ -22,6 +22,7 @@ import RbcModel from "@/pages/models/RbcModel.tsx";
 import {RegistrationSuccess} from "@/pages/auth/RegistrationSuccess.tsx";
 import PasswordReset from "@/pages/auth/PasswordReset.tsx";
 import ActiveRuns from "@/pages/ActiveRuns.tsx";
+import Settings from "@/pages/Settings.tsx";
 
 const rootRoute = createRootRoute({component:Root})
 const homeRoute = createRoute({
@@ -91,6 +92,13 @@ const dashboardRoute = createRoute({
     component: UserDashboard,
 })
 
+const settingsRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/settings',
+    component: Settings,
+})
+
+
 const activeRunsRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: '/active-runs',
@@ -132,7 +140,9 @@ const signupSuccessRoute = createRoute({
 })
 
 
-const routeTree = rootRoute.addChildren([homeRoute, aboutRoute, dataRoute,modelsRoute,hydroDemo,mhdDemo,demo,loginRoute, signupRoute, signupSuccessRoute,passwordResetRoute,dashboardRoute,activeRunsRoute,eulerModelRoute,hydroModelRoute,mhdModelRoute,rbcModelRoute])
+const routeTree = rootRoute.addChildren([homeRoute, aboutRoute, dataRoute,modelsRoute,
+    hydroDemo,mhdDemo,demo,loginRoute, signupRoute, signupSuccessRoute,passwordResetRoute,
+    dashboardRoute,settingsRoute,activeRunsRoute,eulerModelRoute,hydroModelRoute,mhdModelRoute,rbcModelRoute])
 
 export const router = createRouter({routeTree})
 

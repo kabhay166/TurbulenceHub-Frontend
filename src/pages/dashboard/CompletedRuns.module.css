@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     height: 100%;
+    position: relative;
 }
 
 .completedRunsContainer h1 {
@@ -40,4 +41,30 @@
     gap: 10px;
 }
 
+.parameterWidow {
+    position: absolute;
+    top: 50px;
+    background-color: #3d3d6c;
+    color: white;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.parameterWidow div:first-of-type {
+    background-color: red;
+    margin: 0;
+    padding: 0 10px;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.parameterWidow div:first-of-type button {
+    height: 40px;
+}
+
+.parameterWidow div:last-of-type {
+    padding: 10px;
+}
 

@@ -114,9 +114,9 @@ export default function ActiveRuns() {
                 <div>
                     <p>{runInfo.kind}</p>
                     <p>{runInfo.dimension}D</p>
+                    <p>{runInfo.resolution}</p>
                 </div>
 
-                <p>{runInfo.resolution}</p>
                 <div>
                     <p>{runInfo.timeOfRun.split('_').slice(0,3).join('-')}</p>
                     <p>{runInfo.timeOfRun.split('_').slice(3,6).join(':')}</p>
