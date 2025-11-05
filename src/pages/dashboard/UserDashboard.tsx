@@ -201,7 +201,7 @@ function RunStatistics({runData,recentRunData} : {runData: RunData[],recentRunDa
 
     });
 
-    return <div className={styles.main}>
+    return <div className={styles.runStatisticsContainer}>
 
         <div className={styles.cardContainer}>
 

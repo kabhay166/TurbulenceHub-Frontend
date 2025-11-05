@@ -1,0 +1,39 @@
+.analyzeRunContainer {
+    height: 100%;
+}
+
+.analyzeRunContainer .heading {
+    padding-left: 50px;
+    background-color: blue;
+    display: flex;
+    gap: 50px;
+    align-items: center;
+}
+
+.analyzeRunContainer form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.analyzeRunContainer form div{
+    display: flex;
+    flex-direction: column;
+}
+
+.analyzeRunContainer form input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.analyzeRunContainer form button {
+    padding: 5px;
+    /*width: 200px;*/
+    height: 50px;
+    font-size: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}

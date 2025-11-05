@@ -6,9 +6,10 @@ import { FaDownload } from 'react-icons/fa';
 import AppConfig from "../../config.ts";
 
 
-const eulerTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Inititial Time","Final Time","Download","Description"]
-const hydroTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Viscosity","Inititial Time","Final Time","Download","Description"];
-const mhdTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Viscosity","Magnetic Diffusivity","Inititial Time","Final Time","Download","Description"]
+const eulerTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Initial Time","Final Time","Download","Description"]
+const hydroTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Viscosity","Initial Time","Final Time","Download","Description"];
+const mhdTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Viscosity","Magnetic Diffusivity","Initial Time","Final Time","Download","Description"]
+const rbcTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Initial Time","Final Time","Download","Description"]
 
 interface EulerData {
   id: number,
@@ -28,6 +29,10 @@ interface HydroData extends EulerData {
 interface MhdData extends EulerData {
   viscosity: number,
   magneticDiffusivity: number
+}
+
+interface RbcData extends EulerData {
+    rayleighNumber:number;
 }
 
 
@@ -66,6 +71,7 @@ export default function Data() {
   const [eulerData,setEulerData] = useState<EulerData[]>([]);
   const [hydroData,setHydroData] = useState<HydroData[]>([]);
   const [mhdData,setMhdData] = useState<MhdData[]>([]);
+  const [rbcData,setRbcData] = useState<RbcData[]>([]);
 
   const [filters,setFilters] = useState<DataFilter>(initialFilter);
 
@@ -85,7 +91,7 @@ export default function Data() {
   }
 
   async function fetchData(selectedModel: string) {
-    let dataList : EulerData[] | HydroData[] | MhdData[] = [];
+    let dataList : EulerData[] | HydroData[] | MhdData[] | RbcData[] = [];
 
     try {
     const dataResponse : Response = await fetch(`${AppConfig.getDataUrl()}/${selectedModel.toLowerCase()}`,{
@@ -108,6 +114,9 @@ export default function Data() {
     } else if(selectedModel == 'MHD') {
       const mhdData = dataList as MhdData[];
       setMhdData(mhdData);
+    } else if(selectedModel == 'RBC') {
+        const rbcData = dataList as RbcData[];
+        setRbcData(rbcData);
     }
 
   }
@@ -352,6 +361,7 @@ export default function Data() {
         {selectedModel == "Euler" && <EulerTable eulerDataList={eulerData}/>}
         {selectedModel == "Hydro" &&  <HydroTable hydroDataList={hydroData}/>}
         {selectedModel == "MHD" &&  <MHDTable mhdDataList={mhdData} />}
+        {selectedModel == "RBC" && <RBCTable rbcDataList={rbcData}/>}
       </div>
     
     </div>
@@ -435,6 +445,31 @@ function MHDTable( {mhdDataList } : { mhdDataList: MhdData[]}) {
       </tbody>
     </table>
   </>
+}
+
+function RBCTable( {rbcDataList} : {rbcDataList: RbcData[]}) {
+    return <>
+        <table>
+            <thead>
+            <tr>
+                {rbcTableHeaders.map((e) => <th colSpan={ e =='Description' ? 4 : 1}>{e}</th>)}
+            </tr>
+            </thead>
+            <tbody>
+            {rbcDataList.map(e => (
+                <tr key={e.id}>
+                    <td>{e.dimension}</td>
+                    <td>{e.resolution}</td>
+                    <td>{e.initialCondition}</td>
+                    <td>{e.tinitial}</td>
+                    <td>{e.tfinal}</td>
+                    <td><FaDownload onClick={ () => downloadData('RBC',e.id)} /></td>
+                    <td>{e.description}</td>
+                </tr>
+            ) )}
+
+            </tbody>
+        </table> </>
 }
 
 function FilterWindow({selectedModel,closeFilterWindow,filters,onFilterChanged} : {selectedModel : string, closeFilterWindow : () => void,filters: DataFilter,onFilterChanged: (filters: DataFilter) => void}) {
