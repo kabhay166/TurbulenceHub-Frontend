@@ -1,10 +1,10 @@
-import { Link, useNavigate } from "@tanstack/react-router"
+import {Link, useNavigate} from "@tanstack/react-router"
 import styles from "./Login.module.css"
 import {type FormEvent, useState} from "react";
 import useUserStore from "@/globals/userStore.ts";
 import {FaArrowLeft} from "react-icons/fa";
 import AppConfig from "../../../config.ts";
-import {useToast} from "@/contexts/ToastContext.tsx";
+import {ToastType, useToast} from "@/contexts/ToastContext.tsx";
 
 interface  User {
     username:string,
@@ -56,16 +56,16 @@ export function Login() {
                 console.log(username,email,token);
                 userStore.setUser({username: username, email: email});
                 await navigate({to: "/"});
-                addToast('login successful');
+                addToast('login successful',ToastType.success);
             } else {
                 const errorMessage = responseJson["error"]
 
-                addToast(errorMessage);
+                addToast(errorMessage,ToastType.error);
                 console.log("Could not log in");
             }
 
         } catch(e:unknown) {
-            addToast(`An error occured: ${e}`)
+            addToast(`An error occured: ${e}`,ToastType.error)
             console.log(`An error occured: ${e}`);
         }
     }

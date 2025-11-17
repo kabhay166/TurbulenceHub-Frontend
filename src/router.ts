@@ -7,13 +7,13 @@ import {
 import Home from './pages/Home'
 import Models from './pages/Models'
 import About from './pages/About'
-import Data from './pages/Data'
+import Data from './pages/data/Data.tsx'
 import Root from './pages/Root'
-import HydroDemo from './pages/HydroDemo'
-import MhdDemo from './pages/MhdDemo'
+import HydroDemo from './pages/demo/HydroDemo.tsx'
+import MhdDemo from './pages/demo/MhdDemo.tsx'
 import { Login } from '@/pages/auth/Login.tsx'
 import { Signup } from '@/pages/auth/Signup.tsx'
-import Demo from "@/pages/Demo.tsx";
+import Demo from "@/pages/demo/Demo.tsx";
 import UserDashboard from "@/pages/dashboard/UserDashboard.tsx";
 import HydroModel from "@/pages/models/HydroModel.tsx";
 import EulerModel from "@/pages/models/EulerModel.tsx";
@@ -21,8 +21,9 @@ import MhdModel from "@/pages/models/MhdModel.tsx";
 import RbcModel from "@/pages/models/RbcModel.tsx";
 import {RegistrationSuccess} from "@/pages/auth/RegistrationSuccess.tsx";
 import PasswordReset from "@/pages/auth/PasswordReset.tsx";
-import ActiveRuns from "@/pages/ActiveRuns.tsx";
+import ActiveRuns from "@/pages/dashboard/ActiveRuns.tsx";
 import Settings from "@/pages/Settings.tsx";
+import AddData from "@/pages/dashboard/AddData.tsx";
 
 const rootRoute = createRootRoute({component:Root})
 const homeRoute = createRoute({
@@ -140,9 +141,16 @@ const signupSuccessRoute = createRoute({
 })
 
 
+const addDataRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/add-data',
+    component: AddData,
+})
+
+
 const routeTree = rootRoute.addChildren([homeRoute, aboutRoute, dataRoute,modelsRoute,
     hydroDemo,mhdDemo,demo,loginRoute, signupRoute, signupSuccessRoute,passwordResetRoute,
-    dashboardRoute,settingsRoute,activeRunsRoute,eulerModelRoute,hydroModelRoute,mhdModelRoute,rbcModelRoute])
+    dashboardRoute,settingsRoute,activeRunsRoute,eulerModelRoute,hydroModelRoute,mhdModelRoute,rbcModelRoute,addDataRoute])
 
 export const router = createRouter({routeTree})
 

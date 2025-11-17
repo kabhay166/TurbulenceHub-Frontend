@@ -2,7 +2,7 @@ import {useState, useRef, useEffect} from "react";
 import styles from "./Demo.module.css";
 import { useParams } from "@tanstack/react-router";
 import { FaArrowRight} from "react-icons/fa";
-import AppConfig from "../../config.ts";
+import AppConfig from "../../../config.ts";
 
 type Para = {
     kind: string;

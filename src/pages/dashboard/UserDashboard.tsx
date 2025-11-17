@@ -1,10 +1,10 @@
-import styles from "../UserDashboard.module.css";
+import styles from "./UserDashboard.module.css";
 import {useEffect, useState} from "react";
 import PieChart from "../../components/PieChart.tsx";
 import defaultUserImg from "../../assets/default_user_image.jpg";
 import AppConfig from "../../../config.ts";
 import useUserStore from "@/globals/userStore.ts";
-import ActiveRuns from "@/pages/ActiveRuns.tsx";
+import ActiveRuns from "@/pages/dashboard/ActiveRuns.tsx";
 import CompletedRuns from "@/pages/dashboard/CompletedRuns.tsx";
 
 interface RunData  {

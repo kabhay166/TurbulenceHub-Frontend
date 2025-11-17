@@ -3,7 +3,7 @@ import styles from './Data.module.css';
 import { FaSearch } from 'react-icons/fa';
 import { FaFilter } from 'react-icons/fa';
 import { FaDownload } from 'react-icons/fa';
-import AppConfig from "../../config.ts";
+import AppConfig from "../../../config.ts";
 
 
 const eulerTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Initial Time","Final Time","Download","Description"]
@@ -349,7 +349,6 @@ export default function Data() {
         <option value="Hydro">Hydro</option>
         <option value="MHD">MHD</option>
         <option value="RBC">RBC</option>
-        <option value="Scalar">Scalar</option>
       </select>
       <button className={styles.searchButton} onClick={handleSearch}><FaSearch /> </button>
       

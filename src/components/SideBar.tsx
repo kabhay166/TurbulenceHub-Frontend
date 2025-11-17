@@ -30,6 +30,7 @@ export default function SideBar({show, closeSidebar} : {show: boolean | null, cl
         <ul>
             <li><button ><Link to="/active-runs">Active Runs</Link></button></li>
             <li><button ><Link to="/dashboard">Dashboard</Link></button></li>
+            <li><button ><Link to="/add-data">Add Data</Link></button></li>
             <li><button ><Link to="/settings">Settings</Link></button></li>
             <li><button onClick={logout}>Logout</button></li>
 
