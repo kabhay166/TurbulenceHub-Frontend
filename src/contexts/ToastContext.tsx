@@ -1,4 +1,4 @@
-import {createContext, type ReactNode, useContext, useState} from "react";
+import {createContext, type ReactNode, useState} from "react";
 
 interface Toast {
     id:number;
@@ -6,12 +6,14 @@ interface Toast {
     type:ToastType
 }
 
-export const enum ToastType {
-    normal,
-    success,
-    warning,
-    error,
-}
+export const ToastTypes = {
+    normal: "normal",
+    success: "success",
+    warning: "warning",
+    error: "error",
+} as const
+
+export type ToastType = keyof typeof ToastTypes;
 
 interface ToastContextType {
     toasts: Toast[];
@@ -20,7 +22,7 @@ interface ToastContextType {
 }
 
 const ToastDisplayTime = 3000;
-const ToastContext = createContext<ToastContextType | undefined>(undefined);
+export const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 let toastId = 0;
 
@@ -28,7 +30,7 @@ export const ToastProvider = ({children} : {children:ReactNode}) => {
 
     const [toasts,setTosts] = useState<Toast[]>([]);
 
-    const addToast = (message:string,type:ToastType= ToastType.normal) => {
+    const addToast = (message:string,type:ToastType= ToastTypes.normal) => {
         const id = ++toastId;
         setTosts(prev => [...prev, {id,message,type}]);
         setTimeout(() => removeToast(id),ToastDisplayTime)
@@ -39,8 +41,8 @@ export const ToastProvider = ({children} : {children:ReactNode}) => {
     }
 
     function getToastColor(type:ToastType) {
-        return type == ToastType.normal ? "black" : type == ToastType.warning ? "yellow" :
-            type == ToastType.success ? "green" : "red";
+        return type == ToastTypes.normal ? "black" : type == ToastTypes.warning ? "yellow" :
+            type == ToastTypes.success ? "green" : "red";
     }
 
 
@@ -60,11 +62,3 @@ export const ToastProvider = ({children} : {children:ReactNode}) => {
 
 };
 
-export const useToast = () => {
-    const context = useContext(ToastContext);
-    if(!context) {
-        throw new Error("useToast must be used within a ToastProvider");
-    }
-
-    return context;
-}

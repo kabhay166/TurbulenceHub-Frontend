@@ -5,21 +5,25 @@ import { FaFilter } from 'react-icons/fa';
 import { FaDownload } from 'react-icons/fa';
 import AppConfig from "../../../config.ts";
 
-
-const eulerTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Initial Time","Final Time","Download","Description"]
+const miscellaneousTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Download","Description"]
+const eulerTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Initial Time","Final Time","Download","Description"];
 const hydroTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Viscosity","Initial Time","Final Time","Download","Description"];
-const mhdTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Viscosity","Magnetic Diffusivity","Initial Time","Final Time","Download","Description"]
-const rbcTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Initial Time","Final Time","Download","Description"]
+const mhdTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Viscosity","Magnetic Diffusivity","Initial Time","Final Time","Download","Description"];
+const rbcTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Initial Time","Final Time","Download","Description"];
 
-interface EulerData {
-  id: number,
-  dimension: number,
-  resolution: string,
-  initialCondition: string,
+
+interface MiscellaneousData {
+    id: number,
+    dimension: number,
+    resolution: string,
+    initialCondition: string,
+    downloadPath: string,
+    description: string,
+}
+
+interface EulerData extends MiscellaneousData {
   tinitial: number,
   tfinal: number,
-  downloadPath: string,
-  description: string,
 }
 
 interface HydroData extends EulerData {
@@ -68,6 +72,7 @@ export default function Data() {
   const [selectedModel, setSelectedModel] = useState("");
   const [showFilterWindow, setShowFilterWindow] = useState(false);
 
+  const [miscellaneousData,setMiscellaneousData] = useState<MiscellaneousData[]>([]);
   const [eulerData,setEulerData] = useState<EulerData[]>([]);
   const [hydroData,setHydroData] = useState<HydroData[]>([]);
   const [mhdData,setMhdData] = useState<MhdData[]>([]);
@@ -105,8 +110,10 @@ export default function Data() {
         console.log(`Unexpected error occured. ${e}`);
     }
     
-    console.log('fetch data called');
-    if(selectedModel == 'Euler') {
+    if(selectedModel == 'Miscellaneous') {
+        setMiscellaneousData(dataList);
+    }
+    else if(selectedModel == 'Euler') {
       setEulerData(dataList);
     } else if(selectedModel == 'Hydro') {
       const hydroData = dataList as HydroData[];
@@ -349,6 +356,8 @@ export default function Data() {
         <option value="Hydro">Hydro</option>
         <option value="MHD">MHD</option>
         <option value="RBC">RBC</option>
+        <option value="Miscellaneous">Miscellaneous</option>
+
       </select>
       <button className={styles.searchButton} onClick={handleSearch}><FaSearch /> </button>
       
@@ -361,6 +370,7 @@ export default function Data() {
         {selectedModel == "Hydro" &&  <HydroTable hydroDataList={hydroData}/>}
         {selectedModel == "MHD" &&  <MHDTable mhdDataList={mhdData} />}
         {selectedModel == "RBC" && <RBCTable rbcDataList={rbcData}/>}
+        {selectedModel == "Miscellaneous" && <MiscellaneousTable miscellaneousDataList={miscellaneousData}/>}
       </div>
     
     </div>
@@ -470,6 +480,30 @@ function RBCTable( {rbcDataList} : {rbcDataList: RbcData[]}) {
             </tbody>
         </table> </>
 }
+
+function MiscellaneousTable( {miscellaneousDataList} : {miscellaneousDataList: MiscellaneousData[]}) {
+    return <>
+        <table>
+            <thead>
+            <tr>
+                {miscellaneousTableHeaders.map((e) => <th colSpan={ e =='Description' ? 4 : 1}>{e}</th>)}
+            </tr>
+            </thead>
+            <tbody>
+            {miscellaneousDataList.map(e => (
+                <tr key={e.id}>
+                    <td>{e.dimension}</td>
+                    <td>{e.resolution}</td>
+                    <td>{e.initialCondition}</td>
+                    <td><FaDownload onClick={ () => downloadData('Euler',e.id)} /></td>
+                    <td>{e.description}</td>
+                </tr>
+            ) )}
+
+            </tbody>
+        </table> </>
+}
+
 
 function FilterWindow({selectedModel,closeFilterWindow,filters,onFilterChanged} : {selectedModel : string, closeFilterWindow : () => void,filters: DataFilter,onFilterChanged: (filters: DataFilter) => void}) {
   

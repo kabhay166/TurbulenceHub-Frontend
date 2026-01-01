@@ -3,7 +3,6 @@ import {Link, useNavigate} from "@tanstack/react-router";
 import {FaTimes} from "react-icons/fa";
 
 export default function SideBar({show, closeSidebar} : {show: boolean | null, closeSidebar: () => void}) {
-    console.log('show is ', show);
 
     const navigate = useNavigate();
     const userStore = useUserStore();
@@ -30,7 +29,7 @@ export default function SideBar({show, closeSidebar} : {show: boolean | null, cl
         <ul>
             <li><button ><Link to="/active-runs">Active Runs</Link></button></li>
             <li><button ><Link to="/dashboard">Dashboard</Link></button></li>
-            <li><button ><Link to="/add-data">Add Data</Link></button></li>
+            {userStore.user.role == 'ADMIN' && <li><button ><Link to="/add-data">Add Data</Link></button></li> }
             <li><button ><Link to="/settings">Settings</Link></button></li>
             <li><button onClick={logout}>Logout</button></li>
 

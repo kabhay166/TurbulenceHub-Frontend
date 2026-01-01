@@ -1,7 +1,8 @@
 import {useEffect, useRef, useState} from "react";
 import AppConfig from "../../../config.ts";
 import styles from "@/pages/dashboard/ActiveRuns.module.css";
-import {ToastType, useToast} from "@/contexts/ToastContext.tsx";
+import {ToastTypes} from "@/contexts/ToastContext.tsx";
+import {useToast} from "@/hooks/UseToast.tsx";
 
 interface RunInfo {
     kind:string,
@@ -47,10 +48,10 @@ export default function ActiveRuns() {
             );
 
         if(response.ok) {
-            addToast("Run stopped successfully",ToastType.success);
+            addToast("Run stopped successfully",ToastTypes.success);
             await getActiveRuns();
         } else {
-            addToast("Some error occurred while stopping the run",ToastType.error);
+            addToast("Some error occurred while stopping the run",ToastTypes.error);
         }
     }
 

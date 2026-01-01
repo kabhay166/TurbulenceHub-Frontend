@@ -4,7 +4,8 @@ import {type FormEvent, useState} from "react";
 import useUserStore from "@/globals/userStore.ts";
 import {FaArrowLeft} from "react-icons/fa";
 import AppConfig from "../../../config.ts";
-import {ToastType, useToast} from "@/contexts/ToastContext.tsx";
+import {ToastTypes} from "@/contexts/ToastContext.tsx";
+import {useToast} from "@/hooks/UseToast.tsx";
 
 interface  User {
     username:string,
@@ -46,7 +47,8 @@ export function Login() {
                 const username: string = responseJson["username"];
                 const email: string = responseJson["email"];
                 const token: string = responseJson["token"];
-                const showOTPPage: boolean = responseJson["showOTPPage"]
+                const showOTPPage: boolean = responseJson["showOTPPage"];
+                const role: string = responseJson["role"];
                 if(token == "" && showOTPPage == true) {
                     setShowOtp(true);
                     return;
@@ -54,18 +56,18 @@ export function Login() {
 
                 localStorage.setItem('accessToken',token);
                 console.log(username,email,token);
-                userStore.setUser({username: username, email: email});
+                userStore.setUser({username: username, email: email,role:role});
                 await navigate({to: "/"});
-                addToast('login successful',ToastType.success);
+                addToast('login successful',ToastTypes.success);
             } else {
                 const errorMessage = responseJson["error"]
 
-                addToast(errorMessage,ToastType.error);
+                addToast(errorMessage,ToastTypes.error);
                 console.log("Could not log in");
             }
 
         } catch(e:unknown) {
-            addToast(`An error occured: ${e}`,ToastType.error)
+            addToast(`An error occured: ${e}`,ToastTypes.error)
             console.log(`An error occured: ${e}`);
         }
     }

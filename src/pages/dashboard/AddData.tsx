@@ -1,7 +1,8 @@
 import styles from "./AddData.module.css";
 import {useState} from "react";
 import AppConfig from "../../../config.ts";
-import {ToastType, useToast} from "@/contexts/ToastContext.tsx";
+import {ToastTypes} from "@/contexts/ToastContext.tsx";
+import {useToast} from "@/hooks/UseToast.tsx";
 
 interface GenericDataParameters {
     kind:                   string;
@@ -68,17 +69,17 @@ export default function AddData() {
             });
 
             if(dataAddResponse.ok) {
-                addToast('Data added successfully',ToastType.success);
+                addToast('Data added successfully',ToastTypes.success);
             } else {
                 const responseMessage = await dataAddResponse.text();
-                addToast(responseMessage,ToastType.error);
+                addToast(responseMessage,ToastTypes.error);
             }
 
 
             setParameters(initialParameters);
         } catch(e : unknown) {
             console.log(`Unexpected error occurred. ${e}`);
-            addToast(`Unexpected error occurred. ${e}`,ToastType.error);
+            addToast(`Unexpected error occurred. ${e}`,ToastTypes.error);
         }
         console.log(JSON.stringify(parameters));
     }

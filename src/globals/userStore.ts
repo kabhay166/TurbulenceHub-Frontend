@@ -4,6 +4,7 @@ import {persist} from "zustand/middleware";
 interface User {
     username: string | null;
     email: string | null;
+    role:string|null;
 }
 
 interface UserState {
@@ -16,9 +17,9 @@ interface UserState {
 const useUserStore = create<UserState>()(
     persist(
         (set) => ({
-            user: { username: null, email: null },
+            user: { username: null, email: null, role: null },
             setUser: (user) => set({ user }),
-            clearUser: () => set({ user: { username: null, email: null } }),
+            clearUser: () => set({ user: { username: null, email: null, role:null } }),
         }),
         {
             name: 'user-storage', // key in localStorage

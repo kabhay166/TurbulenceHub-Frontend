@@ -5,7 +5,6 @@ import { CgProfile } from "react-icons/cg";
 function NavBar({toggleSidebar} : {toggleSidebar: () => void}) {
     
     const userStore = useUserStore();
-    console.log('Username is: ' + userStore.user.username);
     return (
         <nav id="navbar">
 

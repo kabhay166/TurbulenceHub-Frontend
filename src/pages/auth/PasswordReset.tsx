@@ -1,5 +1,6 @@
 import styles from "./PasswordReset.module.css";
-import {useToast} from "@/contexts/ToastContext.tsx";
+import {ToastTypes} from "@/contexts/ToastContext.tsx";
+import {useToast} from "@/hooks/UseToast.tsx";
 import AppConfig from "../../../config.ts";
 import {useState} from "react";
 import {useSearch} from "@tanstack/react-router";
@@ -30,7 +31,7 @@ export default function PasswordReset() {
     async function handleResetButtonClicked(e:React.FormEvent<HTMLFormElement>) {
             e.preventDefault();
             if(userEmail === "") {
-                addToast(`Email cannot be empty`);
+                addToast(`Email cannot be empty`,ToastTypes.warning);
             }
             try {
                 const resetLinkResponse = await fetch(AppConfig.getPasswordResetUrl(),{
@@ -49,11 +50,11 @@ export default function PasswordReset() {
                     setResetMailSent(true);
                 } else {
                     const errorMessage = responseJson["error"];
-                    addToast(errorMessage);
+                    addToast(errorMessage,ToastTypes.error);
                 }
 
             } catch(e:unknown) {
-                addToast(`An error occured: ${e}`)
+                addToast(`An error occured: ${e}`,ToastTypes.error)
             }
 
     }
@@ -62,12 +63,12 @@ export default function PasswordReset() {
         e.preventDefault();
 
         if(newPassword != confirmNewPassword) {
-            addToast("The passwords do no match");
+            addToast("The passwords do no match",ToastTypes.error);
             return;
         }
 
         if(token == null) {
-            addToast(`Reset token not found`);
+            addToast(`Reset token not found`,ToastTypes.error);
             return;
         }
         try {
@@ -89,11 +90,11 @@ export default function PasswordReset() {
                 setPasswordChanged(true);
             } else {
                 const errorMessage = responseJson["error"];
-                addToast(errorMessage);
+                addToast(errorMessage,ToastTypes.error);
             }
 
         } catch(e:unknown) {
-            addToast(`An error occured: ${e}`)
+            addToast(`An error occured: ${e}`,ToastTypes.error);
         }
 
     }
