@@ -8,9 +8,8 @@ function NavBar({toggleSidebar} : {toggleSidebar: () => void}) {
     return (
         <nav id="navbar">
 
-            {/*<h2>TurbulenceHub</h2>*/}
 
-            <h2><span style={{color:'#30c1d1'}}>T</span>urbulence<span style={{color:'#30c1d1'}}>H</span>ub</h2>
+            <h2 className={"logo"}>TurbulenceHub</h2>
             <ul>
                 <li>
                     <Link to="/">Home</Link>
@@ -51,7 +50,7 @@ function NavBar({toggleSidebar} : {toggleSidebar: () => void}) {
 
 function UserMenuItems({toggleSidebar}: {toggleSidebar: () => void}) {
     return <div className="userMenuItems">
-        <CgProfile size={25} color="white" onClick={toggleSidebar} />
+        <CgProfile size={25} color="black" onClick={toggleSidebar} />
     </div>;
 }
 

@@ -4,9 +4,8 @@ body, html, #root {
   min-height: 100vh;
   width: 100%;
   font-family: 'Inter', sans-serif;
-  background-color: rgba(245,222,179,0.1);
-    /*background-color: white;*/
-    overflow: auto;
+  background-color: white;
+  overflow: auto;
 }
 
 #root {
@@ -21,9 +20,8 @@ body, html, #root {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  background:  black;
+  background-color: white;
   box-sizing: border-box;
-    /*background-color: red;*/
 }
 
 #navbar h2 {
@@ -37,17 +35,15 @@ body, html, #root {
   list-style: none;
   display: flex;
   flex-direction: row;
-  background-color: black;
   align-items: center;
   margin-right: 5%;
   align-content: start;
 }
 
 #navbar li {
-  color: white;
-  background-color: black;
+  color: black;
   margin: 10px;
-  font-size: 1rem;
+  font-size: 1.2rem;
   padding: 5px;
 }
 
@@ -72,6 +68,15 @@ body, html, #root {
   border: none;
 }
 
+#navbar .logo {
+    display: inline-block;
+    height: 30px;
+    border: 2px solid blue;
+    color: black;
+    padding: 10px;
+
+}
+
 
 #hamburgerNavbar {
   display: none;
@@ -79,7 +84,7 @@ body, html, #root {
 
 .menuItems {
   position: fixed;
-  top: 70px;
+  top: 0;
   right: 0;
   height: 100%;
   max-width: 200px;

@@ -9,20 +9,29 @@
     margin-right: auto;
     font-weight: 100;
     overflow-y: hidden;
-    background-color: wheat;
+    background-color: rgba(155,155,155,0.2);
 }
 
 .banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid grey;
+    background: linear-gradient(135deg, #1e1b4b, #3730a3, #4f46e5, #06b6d4);
+    color: white;
     margin-top: 5%;
-    width: 40%;
+    padding: 20px;
+    width: 70%;
+    height: 60%;
+    margin-left: auto;
+    margin-right: auto;
     min-width: 300px;
     text-align: start;
-    margin-left: 30px;
-    font-size: clamp(1.2rem, 5vw, 3rem);
 }
 
 .banner h1 {
-    font-size: 1.3em;
+    font-size: clamp(1.2rem, 5vw, 3rem);
     font-weight: 300;
 }
 
