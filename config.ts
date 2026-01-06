@@ -14,15 +14,19 @@ const AppConfig = {
     },
 
     getLoginUrl() {
-        return `${this.getBaseUrl()}/user/login`;
+        return `/user/login`;
     },
 
     getSignupUrl() {
-        return `${this.getBaseUrl()}/user/signup`;
+        return `/user/signup`;
     },
 
     getDataUrl() {
-        return `${this.getBaseUrl()}/data`
+        return `/data`
+    },
+
+    getAddDataUrl() {
+        return `/data/add-data`
     },
 
     getDownloadUrl(model:string,id:number) {
@@ -48,7 +52,7 @@ const AppConfig = {
     },
 
     getPasswordResetUrl() {
-        return `${this.getBaseUrl()}/user/reset-password`;
+        return `/user/reset-password`; //`${this.getBaseUrl()}/user/reset-password`;
     }
 }
 

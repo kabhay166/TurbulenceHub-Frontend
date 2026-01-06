@@ -4,6 +4,7 @@ import {useToast} from "@/hooks/UseToast.tsx";
 import AppConfig from "../../../config.ts";
 import {useState} from "react";
 import {useSearch} from "@tanstack/react-router";
+import api from "@/services/api_service.ts";
 
 export default function PasswordReset() {
 
@@ -34,19 +35,17 @@ export default function PasswordReset() {
                 addToast(`Email cannot be empty`,ToastTypes.warning);
             }
             try {
-                const resetLinkResponse = await fetch(AppConfig.getPasswordResetUrl(),{
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
+                const resetLinkResponse = await api.post(
+                    AppConfig.getPasswordResetUrl(),
+                    {
                         email: userEmail
-                    })
-                });
+                    },
+                    );
 
-                const responseJson = await resetLinkResponse.json();
 
-                if(resetLinkResponse.ok) {
+                const responseJson = await resetLinkResponse.data;
+
+                if(resetLinkResponse.status == 200) {
                     setResetMailSent(true);
                 } else {
                     const errorMessage = responseJson["error"];
@@ -72,21 +71,17 @@ export default function PasswordReset() {
             return;
         }
         try {
-            const passwordChangeResponse = await fetch(AppConfig.getPasswordResetUrl(),{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
+            const passwordChangeResponse = await api.post(AppConfig.getPasswordResetUrl(),
+                {
                     token: token,
                     password: newPassword,
                     confirmPassword: confirmNewPassword
-                })
-            });
+                }
+            );
 
-            const responseJson = await passwordChangeResponse.json();
+            const responseJson = await passwordChangeResponse.data;
 
-            if(passwordChangeResponse.ok) {
+            if(passwordChangeResponse.status == 200) {
                 setPasswordChanged(true);
             } else {
                 const errorMessage = responseJson["error"];

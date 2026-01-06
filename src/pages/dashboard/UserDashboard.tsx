@@ -2,10 +2,10 @@ import styles from "./UserDashboard.module.css";
 import {useEffect, useState} from "react";
 import PieChart from "../../components/PieChart.tsx";
 import defaultUserImg from "../../assets/default_user_image.jpg";
-import AppConfig from "../../../config.ts";
 import useUserStore from "@/globals/userStore.ts";
 import ActiveRuns from "@/pages/dashboard/ActiveRuns.tsx";
 import CompletedRuns from "@/pages/dashboard/CompletedRuns.tsx";
+import api from "@/services/api_service.ts";
 
 interface RunData  {
     kind:string,
@@ -40,54 +40,30 @@ export default function UserDashboard() {
 
 
     async function getAllRuns() {
-        const response = await fetch(`${AppConfig.getBaseUrl()}/dashboard/allRuns`,
+        const response = await api.get(`/dashboard/allRuns`);
 
-            {
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("accessToken")
-                }
-            }
-            );
-
-        if(response.ok) {
-            const runsData = await response.json();
+        if(response.status == 200) {
+            const runsData = await response.data;
             setAllRunData(runsData);
 
         }
     }
 
     async function getRecentRuns() {
-        const response = await fetch(`${AppConfig.getBaseUrl()}/dashboard/recentRuns`,
+        const response = await api.get(`/dashboard/recentRuns`);
 
-            {
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("accessToken")
-                }
-            }
-        );
-
-        if(response.ok) {
-            const runsData = await response.json();
+        if(response.status == 200) {
+            const runsData = await response.data;
             setRecentRunData(runsData);
 
         }
     }
 
     async function getCompletedRuns() {
-        const response = await fetch(`${AppConfig.getBaseUrl()}/dashboard/completedRuns`,
+        const response = await api.get(`/dashboard/completedRuns`);
 
-            {
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("accessToken")
-                }
-            }
-        );
-
-        if(response.ok) {
-            const runsData = await response.json();
+        if(response.status == 200) {
+            const runsData = await response.data;
             setCompletedRunData(runsData);
         }
     }

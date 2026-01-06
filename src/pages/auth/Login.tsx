@@ -6,6 +6,7 @@ import {FaArrowLeft} from "react-icons/fa";
 import AppConfig from "../../../config.ts";
 import {ToastTypes} from "@/contexts/ToastContext.tsx";
 import {useToast} from "@/hooks/UseToast.tsx";
+import api from "@/services/api_service.ts";
 
 interface  User {
     username:string,
@@ -25,22 +26,15 @@ export function Login() {
         e.preventDefault();
 
         try {
-            const loginResponse = await fetch(AppConfig.getLoginUrl(),{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username: user.username,
-                    password:user.password,
-                    otp: user.otp
-
-                }),
+            const loginResponse = await api.post(AppConfig.getLoginUrl(),{
+                username: user.username,
+                password:user.password,
+                otp: user.otp
             });
 
-            const responseJson = await loginResponse.json();
+            const responseJson = await loginResponse.data;
 
-            if(loginResponse.ok) {
+            if(loginResponse.status == 200) {
 
                 console.log("Login was Successfull");
 

@@ -2,13 +2,13 @@
     margin-top: 10px;
     text-align: center;
     width: 70%;
-    max-height: 85vh;
+    /*max-height: 85vh;*/
     min-width: 900px;
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
     color: white;
-    background-color: #dc5151;
+    /*background-color: #dc5151;*/
     display: flex;
     flex-direction: row;
     padding-top: 0;
@@ -52,10 +52,10 @@
 
 .modelsContainer {
     flex: 1;
+    flex-direction: column;
     margin-right: auto;
     margin-left: auto;
     display: grid;
-    grid-template-columns: 1fr 1fr;
     row-gap: 20px;
     justify-content: center;
     align-items: center;
@@ -69,8 +69,9 @@
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: 270px;
+    min-height: 300px;
+    border: 2px solid black;
+    overflow: hidden;
 }
 
 
@@ -78,13 +79,18 @@
     margin: 0;
     font-size: 1.4em;
     font-weight: 400;
-    background-color: black;
+    background-color: rgba(0,0,255,1.0);
     padding: 10px;
     color: white;
 }
 
 .modelItem div {
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+
 }
 
 

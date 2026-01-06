@@ -3,6 +3,7 @@ import AppConfig from "../../../config.ts";
 import styles from "@/pages/dashboard/ActiveRuns.module.css";
 import {ToastTypes} from "@/contexts/ToastContext.tsx";
 import {useToast} from "@/hooks/UseToast.tsx";
+import api from "@/services/api_service.ts";
 
 interface RunInfo {
     kind:string,
@@ -19,35 +20,19 @@ export default function ActiveRuns() {
     const runIdRef = useRef<string>("");
 
     async function getActiveRuns() {
-        const response = await fetch(`${AppConfig.getBaseUrl()}/active-runs`,
+        const response = await api.get(`/active-runs`);
 
-            {
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("accessToken")
-                }
-            }
-        );
-
-        if(response.ok) {
-            const activeRunsData = await response.json();
+        if(response.status == 200) {
+            const activeRunsData = await response.data;
             setActiveRuns(activeRunsData);
 
         }
     }
 
     async function stopRun(id:string) {
-        const response = await fetch(`${AppConfig.getBaseUrl()}/stop-run`,
-            {
-                method: "POST",
-                body: id,
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("accessToken")
-                }
-            }
-            );
+        const response = await api.post(`/stop-run`, id);
 
-        if(response.ok) {
+        if(response.status == 200) {
             addToast("Run stopped successfully",ToastTypes.success);
             await getActiveRuns();
         } else {

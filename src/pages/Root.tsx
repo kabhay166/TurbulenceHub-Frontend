@@ -31,7 +31,7 @@ export default function Root() {
   }
 
   return (
-    <div>
+    <>
       <NavBar toggleSidebar={toggleSidebar}/>
       <HamburgerNavBar isOpen={showHamburgerSidebar == true ? true : false} toggleSidebar={toggleHamburgerSidebar} />
       <HamburgerSidebar show={showHamburgerSidebar} closeSidebar={closeHamburgerSidebar} />
@@ -39,6 +39,6 @@ export default function Root() {
       <SideBar show={showSidebar} closeSidebar={closeSidebar}/>
       }
       <Outlet />
-    </div>
+    </>
   );
 }

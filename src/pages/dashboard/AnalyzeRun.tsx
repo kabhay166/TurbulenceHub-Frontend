@@ -1,8 +1,8 @@
 import type {CompletedRunData} from "@/pages/dashboard/interfaces.ts";
 import styles from "./AnalyzeRun.module.css";
 import {type FormEvent, useState} from "react";
-import AppConfig from "../../../config.ts";
 import {FaArrowLeft} from "react-icons/fa";
+import api from "@/services/api_service.ts";
 
 interface PlotConfiguration {
     startTime: number,
@@ -28,32 +28,17 @@ export default function AnalyzeRun({completedRunData,closeAnalyzeWindow}: {compl
         e.preventDefault()
         console.log(`Submitting the form with the following values: ${JSON.stringify(plotConfiguration)}`);
 
-        const response = await fetch(`${AppConfig.getBaseUrl()}/dashboard/analyzeRun`,
+        const response = await api.post(`/dashboard/analyzeRun`,
             {
-                method: "POST",
-                body: JSON.stringify({
-                    'id': completedRunData.id,
-                    'kind': completedRunData.kind,
-                    ...plotConfiguration}),
-
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("accessToken"),
-                    "Content-Type": "application/json",
-                }
+                'id': completedRunData.id,
+                'kind': completedRunData.kind,
+                ...plotConfiguration
             }
         );
 
-        if(response.ok) {
+        if(response.status == 200) {
             console.log('run analyzed');
         }
-
-        // if(response.ok) {
-        //     addToast("Run stopped successfully");
-        //     await getActiveRuns();
-        // } else {
-        //     addToast("Some error occurred while stopping the run");
-        // }
-
 
     }
 

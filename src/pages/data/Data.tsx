@@ -4,6 +4,7 @@ import { FaSearch } from 'react-icons/fa';
 import { FaFilter } from 'react-icons/fa';
 import { FaDownload } from 'react-icons/fa';
 import AppConfig from "../../../config.ts";
+import api from "@/services/api_service.ts";
 
 const miscellaneousTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Download","Description"]
 const eulerTableHeaders: string[] = ["Dimension","Resolution","Initial Condition","Initial Time","Final Time","Download","Description"];
@@ -99,9 +100,7 @@ export default function Data() {
     let dataList : EulerData[] | HydroData[] | MhdData[] | RbcData[] = [];
 
     try {
-    const dataResponse : Response = await fetch(`${AppConfig.getDataUrl()}/${selectedModel.toLowerCase()}`,{
-      method: "GET"
-    });
+    const dataResponse : Response = await api.get(`/${selectedModel.toLowerCase()}`);
     
     if(dataResponse.ok) {
       dataList = await dataResponse.json();
@@ -142,9 +141,7 @@ export default function Data() {
     
     try {
     
-    const dataResponse : Response = await fetch(`${AppConfig.getDataUrl()}/${model.toLowerCase()}`,{
-      method: "GET"
-    });
+    const dataResponse : Response = await api(`/${model.toLowerCase()}`);
     
     if(dataResponse.ok) {
       filteredData = await dataResponse.json();

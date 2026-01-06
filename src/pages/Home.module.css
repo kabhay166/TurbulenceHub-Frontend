@@ -1,26 +1,23 @@
 .container {
-    display: flex;
-    flex-direction: column;
     color: black;
     width: 100%;
-    height: calc(100vh - 72px);
+    flex: 1;
     font-size: 24px;
     margin-left: auto;
     margin-right: auto;
     font-weight: 100;
     overflow-y: hidden;
-    background-color: rgba(155,155,155,0.2);
+    background: linear-gradient(135deg, #1e1b4b, #3730a3, #4f46e5, #06b6d4);
 }
 
 .banner {
+    margin-top: 10%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 2px solid grey;
-    background: linear-gradient(135deg, #1e1b4b, #3730a3, #4f46e5, #06b6d4);
+    gap: 20px;
     color: white;
-    margin-top: 5%;
     padding: 20px;
     width: 70%;
     height: 60%;
@@ -39,30 +36,10 @@
     font-weight: 300;
 }
 
-.content {
-    text-align: justify;
-    width: 100%;
-    margin-right: auto;
-    margin-left: auto;
-    color: red;
-}
-
-.models {
-    height: 500px;
-    background-color: red;
-    color: blue;
-}
-
-
-.data {
-    height: 500px;
-    background-color: blue;
-}
-
 .buttonContainer {
     display: flex;
     margin-left: 30px;
-    gap: 10px;
+    gap: 30px;
     color: white;
     font-weight: 200;
 }
@@ -70,36 +47,41 @@
 .buttonContainer button {
     max-width: 300px;
     min-width: 250px;
-    height: 50px;
     font-size: 1.2em;
-    padding: 5px;
-    background-color: inherit;
+    padding: 10px;
     color: inherit;
-
 }
 
 .buttonContainer a {
-    color: black;
+    color: white;
     text-decoration: none;
 }
 
 
 .modelsButton {
-    background-color: white;
+    background-color: #19e319;
+    color: white;
+    border: 2px solid;
+    border-radius: 25px;
+    overflow: hidden;
 }
 
 .modelsButton:hover {
-    background-color: #55cf55;
+    background-color: #68ff68;
     color: white;
 
 }
 
 .datasetButton {
-    background-color: white;
+    background-color: #3b3be1;
+    color: white;
+    border: 2px solid;
+    border-radius: 25px;
+    overflow: hidden;
 }
 
 .datasetButton:hover {
-    background-color: #3434ec;
+    background-color: #0707df;
     color: white;
 }
 

@@ -3,6 +3,7 @@ import styles from "./Signup.module.css"
 import { Link } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
 import AppConfig from "../../../config.ts";
+import api from "@/services/api_service.ts";
 
 export function Signup() {
 
@@ -19,20 +20,14 @@ export function Signup() {
         }
 
         try {
-        const signupResult: Response = await fetch(AppConfig.getSignupUrl(), {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                username: username,
-                email: email,
-                password: password,
-                confirmPassword: confirmPassword
-            })
+        const signupResult = await api.post(AppConfig.getSignupUrl(), {
+            username: username,
+            email: email,
+            password: password,
+            confirmPassword: confirmPassword
         });
         
-        if(signupResult.ok) {
+        if(signupResult.status == 200) {
             console.log("User created");
             navigate({ to: "/signup/success" });
         }

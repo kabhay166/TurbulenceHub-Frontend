@@ -3,6 +3,7 @@ import {useState} from "react";
 import AppConfig from "../../../config.ts";
 import {ToastTypes} from "@/contexts/ToastContext.tsx";
 import {useToast} from "@/hooks/UseToast.tsx";
+import api from "@/services/api_service.ts";
 
 interface GenericDataParameters {
     kind:                   string;
@@ -59,19 +60,15 @@ export default function AddData() {
         e.preventDefault();
 
         try {
-            const dataAddResponse : Response = await fetch(`${AppConfig.getDataUrl()}/add-data`,{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("accessToken")
-                },
-                body: JSON.stringify(parameters),
-            });
+            const dataAddResponse = await api.post(
+                AppConfig.getAddDataUrl(),
+                parameters,
+                { responseType: 'text' });
 
-            if(dataAddResponse.ok) {
+            if(dataAddResponse.status == 200) {
                 addToast('Data added successfully',ToastTypes.success);
             } else {
-                const responseMessage = await dataAddResponse.text();
+                const responseMessage = await dataAddResponse.data;
                 addToast(responseMessage,ToastTypes.error);
             }
 
